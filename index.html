@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technical Visit System — Walkers Tours · Clickable Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b1c34;--ink-3:#1b3a63;--brand:#1f5fae;--brand-2:#2f80e0;--brand-soft:#e8f0fb;
+  --bg:#eef1f5;--surface:#fff;--surface-2:#f7f9fc;--line:#e3e8ef;--line-2:#d4dbe6;
+  --text:#16202f;--muted:#67748a;--faint:#9aa6b8;
+  --green:#1f9d63;--green-bg:#e6f6ed;--green-tx:#0e6b40;
+  --amber:#bd7d12;--amber-bg:#fcf1da;--amber-tx:#8a5c0c;
+  --red:#cf4338;--red-bg:#fbe9e7;--red-tx:#9a2c23;
+  --blue:#2f80e0;--blue-bg:#e8f1fc;--blue-tx:#1a5099;
+  --teal:#13796b;--teal-bg:#e2f3f0;--gray-bg:#eef1f5;--gray-tx:#516072;
+  --purple:#6d4a9c;--purple-bg:#efe9f8;
+  --r:12px;--r-sm:8px;--sh:0 1px 2px rgba(16,32,60,.06),0 4px 16px rgba(16,32,60,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hanken Grotesk',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+
+/* ---------- LOGIN ---------- */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(1200px 600px at 70% -10%,#1b3a63 0%,#0b1c34 55%,#081428 100%);padding:24px}
+.login-card{background:var(--surface);border-radius:18px;box-shadow:0 30px 80px rgba(8,20,40,.45);width:100%;max-width:880px;display:grid;grid-template-columns:1.05fr .95fr;overflow:hidden}
+.login-side{background:linear-gradient(160deg,#1f5fae,#163e76);color:#fff;padding:46px 40px;display:flex;flex-direction:column;justify-content:space-between}
+.login-side .logo{font-family:'Bricolage Grotesque';font-weight:700;font-size:22px;display:flex;gap:10px;align-items:center}
+.login-side h2{color:#fff;font-size:26px;line-height:1.2;margin-top:30px}
+.login-side p{color:#cfe0f5;font-size:13.5px;margin-top:12px;max-width:34ch}
+.login-side .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:26px}
+.login-side .chips span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);padding:4px 10px;border-radius:20px;font-size:11.5px}
+.login-form{padding:46px 42px;display:flex;flex-direction:column;justify-content:center}
+.login-form h3{font-size:20px}
+.login-form .sub{color:var(--muted);font-size:13px;margin:4px 0 22px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--ink-3);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--line-2);border-radius:9px;font-family:inherit;font-size:13.5px;background:#fff;color:var(--text)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.role-hint{font-size:11.5px;color:var(--faint);margin-top:14px;text-align:center}
+
+/* ---------- APP SHELL ---------- */
+.app{display:flex;min-height:100vh}
+.sidebar{width:248px;background:linear-gradient(180deg,#0e2645,#0b1c34);color:#cdd9ea;flex:0 0 248px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand-mark{padding:18px 20px 14px;font-family:'Bricolage Grotesque';font-weight:700;font-size:17px;color:#fff;display:flex;gap:9px;align-items:center;border-bottom:1px solid rgba(255,255,255,.07)}
+.brand-mark .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2f80e0,#1f5fae);display:flex;align-items:center;justify-content:center;font-size:14px}
+.nav-group-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:#6f86a8;padding:16px 20px 6px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 20px;font-size:13.5px;color:#cdd9ea;cursor:pointer;border-left:3px solid transparent}
+.nav-item .ic{width:18px;text-align:center;opacity:.85;font-size:14px}
+.nav-item:hover{background:rgba(255,255,255,.05);color:#fff}
+.nav-item.active{background:rgba(47,128,224,.16);border-left-color:#2f80e0;color:#fff}
+.nav-foot{margin-top:auto;padding:14px 20px;font-size:11px;color:#7e93b3;border-top:1px solid rgba(255,255,255,.07);line-height:1.7}
+.nav-foot .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{height:58px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 22px;position:sticky;top:0;z-index:30}
+.crumb{font-size:13px;color:var(--muted)}.crumb b{color:var(--text)}
+.topbar-spacer{flex:1}
+.co-switch{display:flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+.co-switch button{border:none;background:#fff;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.co-switch button.on{background:var(--brand);color:#fff}
+.icon-btn{border:1px solid var(--line-2);background:#fff;width:34px;height:34px;border-radius:8px;font-size:15px;color:var(--muted);display:flex;align-items:center;justify-content:center;position:relative}
+.icon-btn .badge{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:1px 5px}
+.role-chip{display:flex;align-items:center;gap:9px;border:1px solid var(--line-2);border-radius:30px;padding:4px 6px 4px 12px;font-size:12.5px}
+.role-chip select{border:none;background:transparent;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--ink-3);cursor:pointer}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2f80e0,#1f5fae);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.content{padding:24px 26px 60px;max-width:1180px;width:100%}
+
+/* ---------- HEADERS / TEXT ---------- */
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.page-head h1{font-size:23px}
+.page-head .desc{color:var(--muted);font-size:13px;margin-top:3px}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--brand);font-size:13px;font-weight:600;margin-bottom:12px;cursor:pointer}
+.section-title{font-family:'Bricolage Grotesque';font-weight:600;font-size:15px;color:var(--ink)}
+
+/* ---------- BUTTONS ---------- */
+.btn{border:1px solid transparent;border-radius:9px;padding:9px 15px;font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:7px;transition:.12s}
+.btn-sm{padding:6px 11px;font-size:12.5px}
+.btn-primary{background:var(--brand);color:#fff}.btn-primary:hover{background:#1a5299}
+.btn-ghost{background:#fff;border-color:var(--line-2);color:var(--ink-3)}.btn-ghost:hover{background:var(--surface-2)}
+.btn-soft{background:var(--brand-soft);color:var(--brand)}.btn-soft:hover{background:#dbe8fa}
+.btn-danger{background:#fff;border-color:#e7b4ae;color:var(--red)}.btn-danger:hover{background:var(--red-bg)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{background:#188053}
+.btn-block{width:100%;justify-content:center}
+
+/* ---------- CARDS ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.card-pad{padding:18px}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.grid{display:grid;gap:16px}
+.two-col{grid-template-columns:1fr 1fr}
+.three{grid-template-columns:repeat(3,1fr)}
+.four{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.two-col,.three,.four{grid-template-columns:1fr}}
+
+/* KPI */
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;box-shadow:var(--sh)}
+.kpi .ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:10px}
+.kpi .v{font-family:'Bricolage Grotesque';font-weight:700;font-size:25px;color:var(--ink);line-height:1}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:5px}
+.kpi .t{font-size:11px;margin-top:5px}
+.kpis{display:grid;gap:14px}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.p-green{background:var(--green-bg);color:var(--green-tx)}
+.p-amber{background:var(--amber-bg);color:var(--amber-tx)}
+.p-red{background:var(--red-bg);color:var(--red-tx)}
+.p-blue{background:var(--blue-bg);color:var(--blue-tx)}
+.p-gray{background:var(--gray-bg);color:var(--gray-tx)}
+.p-purple{background:var(--purple-bg);color:var(--purple)}
+
+/* TABLES */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+tbody td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tr.clickable{cursor:pointer}tr.clickable:hover{background:var(--surface-2)}
+.cellname{font-weight:600;color:var(--ink)}
+.bn{font-variant-numeric:tabular-nums}
+
+/* TOOLBAR / TABS / CHIPS */
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:9px;padding:8px 12px;background:#fff;color:var(--muted)}
+.search input{border:none;outline:none;flex:1;font-family:inherit;font-size:13px;background:transparent}
+.filter-chip{border:1px solid var(--line-2);background:#fff;border-radius:8px;padding:8px 12px;font-size:12.5px;color:var(--ink-3);font-weight:500}
+.tabbar{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:9px 14px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand)}
+
+/* DETAIL GRID */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+.dl .k{font-size:11.5px;color:var(--muted)}
+.dl .v{font-size:13.5px;font-weight:600;color:var(--ink);margin-top:1px}
+
+/* STEPPER */
+.stepper{display:flex;align-items:flex-start}
+.step{flex:1;text-align:center;position:relative}
+.step .line{position:absolute;top:13px;left:-50%;width:100%;height:2px;background:var(--line-2);z-index:0}
+.step:first-child .line{display:none}
+.step.done .line,.step.current .line{background:var(--brand)}
+.dot-s{width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid var(--line-2);color:var(--faint);display:flex;align-items:center;justify-content:center;margin:0 auto;position:relative;z-index:1;font-size:12px;font-weight:700}
+.step.done .dot-s{background:var(--green);border-color:var(--green);color:#fff}
+.step.current .dot-s{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 0 0 4px var(--brand-soft)}
+.nm-s{font-size:11.5px;margin-top:6px;color:var(--muted);font-weight:600}
+.step.current .nm-s,.step.done .nm-s{color:var(--ink)}
+
+/* APPROVAL LADDER */
+.ladder{display:flex;flex-direction:column;gap:0}
+.lad{display:flex;gap:14px;position:relative;padding-bottom:18px}
+.lad:last-child{padding-bottom:0}
+.lad .rail{width:26px;display:flex;flex-direction:column;align-items:center}
+.lad .node{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 auto}
+.lad .stem{width:2px;flex:1;background:var(--line-2);margin-top:3px}
+.lad:last-child .stem{display:none}
+.lad.ok .node{background:var(--green);color:#fff}
+.lad.cur .node{background:var(--brand);color:#fff;box-shadow:0 0 0 4px var(--brand-soft)}
+.lad.wait .node{background:#fff;border:2px solid var(--line-2);color:var(--faint)}
+.lad .body{flex:1;padding-bottom:2px}
+.lad .body .t{font-weight:600;font-size:13.5px}
+.lad .body .s{font-size:12px;color:var(--muted)}
+
+/* NOTE / BANNER */
+.note{display:flex;gap:10px;background:var(--brand-soft);border:1px solid #cfe0f7;border-radius:10px;padding:11px 13px;font-size:12.8px;color:var(--ink-3)}
+.note .ic{color:var(--brand);font-weight:700}
+.note.danger{background:var(--red-bg);border-color:#f0c8c2;color:var(--red-tx)}
+.note.danger .ic{color:var(--red)}
+.note.warn{background:var(--amber-bg);border-color:#ecd9a6;color:var(--amber-tx)}
+.note.warn .ic{color:var(--amber)}
+.note.ok{background:var(--green-bg);border-color:#bfe6cf;color:var(--green-tx)}
+.note.ok .ic{color:var(--green)}
+
+/* ASSUMPTION BADGE */
+.abadge{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px dashed var(--purple);color:var(--purple);font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:20px;cursor:pointer;vertical-align:middle}
+.abadge:hover{background:var(--purple-bg)}
+
+/* FORM GRID */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.form-grid .full{grid-column:1/-1}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr}}
+
+/* WIZARD */
+.wiz-steps{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.ws{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);padding:6px 10px;border-radius:20px;background:var(--surface-2);border:1px solid var(--line)}
+.ws .n{width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.ws.active{background:var(--brand-soft);border-color:#cfe0f7;color:var(--brand)}
+.ws.active .n{background:var(--brand);color:#fff;border-color:var(--brand)}
+.ws.complete .n{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* UPLOAD ROW */
+.upload{display:flex;align-items:center;gap:12px;border:1px dashed var(--line-2);border-radius:9px;padding:11px 13px;margin-bottom:9px;background:var(--surface-2)}
+.upload .uic{width:32px;height:32px;border-radius:8px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--brand)}
+.upload .meta{flex:1;font-size:12.5px}.upload .meta b{display:block;color:var(--ink);font-size:13px}
+.upload .meta div{color:var(--muted)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(8,20,40,.5);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(8,20,40,.4)}
+.modal.wide{max-width:680px}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{font-size:17px}
+.modal-body{padding:18px 20px}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:9px}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:200;display:flex;flex-direction:column;gap:10px}
+.toast{background:#0e2645;color:#fff;border-radius:11px;padding:13px 16px;box-shadow:0 12px 40px rgba(8,20,40,.4);max-width:340px;display:flex;gap:11px;animation:slidein .25s}
+.toast .ti{color:#7fc89b;font-size:16px}
+.toast b{display:block;font-size:13.5px}.toast span{font-size:12px;color:#b9c8de}
+@keyframes slidein{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+
+/* TOGGLE */
+.toggle{width:38px;height:22px;border-radius:20px;background:var(--line-2);position:relative;cursor:pointer;flex:0 0 auto}
+.toggle.on{background:var(--brand)}
+.toggle .knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s}
+.toggle.on .knob{left:18px}
+
+/* RBAC GRID */
+.tick{color:var(--green);font-weight:700}.cross{color:var(--faint)}
+
+/* CHARTS */
+.bars{display:flex;align-items:flex-end;gap:10px;height:130px;padding-top:8px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end}
+.bar .b{width:100%;max-width:34px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#2f80e0,#1f5fae)}
+.bar .bl{font-size:10.5px;color:var(--muted)}
+.stars{color:#e0a93b;letter-spacing:1px}
+.qr-box{background:repeating-conic-gradient(#0e2645 0 25%, #fff 0 50%) 50%/12px 12px;border:5px solid #0e2645;border-radius:8px}
+
+/* PHONE FRAME (guide) */
+.phone-stage{display:flex;justify-content:center;padding:8px 0}
+.phone{width:390px;max-width:100%;background:#0b1c34;border-radius:34px;padding:12px;box-shadow:0 30px 70px rgba(8,20,40,.35)}
+.phone-screen{background:var(--bg);border-radius:24px;overflow:hidden;min-height:680px;display:flex;flex-direction:column}
+.phone-top{background:var(--surface);padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.phone-top .t{font-family:'Bricolage Grotesque';font-weight:700;font-size:15px}
+.phone-body{flex:1;overflow-y:auto;padding:14px}
+.phone-tabs{display:flex;background:var(--surface);border-top:1px solid var(--line)}
+.phone-tabs .pt{flex:1;text-align:center;padding:10px 4px;font-size:10.5px;color:var(--muted);cursor:pointer}
+.phone-tabs .pt.on{color:var(--brand)}
+.phone-tabs .pt .pi{font-size:17px;display:block}
+.gcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:11px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mb12{margin-bottom:12px}
+.row2{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
+.row2 .k{color:var(--muted)}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="login-wrap">
+  <div class="login-card">
+    <div class="login-side">
+      <div>
+        <div class="logo"><span style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center">✦</span> Walkers TVS</div>
+        <h2>Technical Visit System</h2>
+        <p>Shop onboarding, voucher allocation, field sales capture, settlement and real-time SAP posting — for Walkers Tours &amp; Whittall Boustead.</p>
+        <div class="chips"><span>OKLO integration</span><span>SAP posting</span><span>WTL · WBTL</span><span>Guide portal</span><span>QR capture</span></div>
+      </div>
+      <div style="font-size:11.5px;color:#9fb6d6">Clickable prototype · no real data is stored</div>
+    </div>
+    <div class="login-form">
+      <h3>Sign in</h3>
+      <div class="sub">Choose a role to preview that person's experience.</div>
+      <div class="field"><label>Email</label><input id="loginEmail" value="anil@walkerstours.com"></div>
+      <div class="field"><label>Password</label><input type="password" value="••••••••••"></div>
+      <div class="field"><label>Sign in as (demo role)</label>
+        <select id="loginRole">
+          <option>Technical Visit Team</option>
+          <option>Finance Team</option>
+          <option>Finance Manager</option>
+          <option>Shop / Supplier</option>
+          <option>Guide / Chauffeur</option>
+          <option>Management</option>
+          <option>IT / Administrator</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="enterApp()">Sign in →</button>
+      <div class="role-hint">You can switch role and company at any time from the top bar.</div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand-mark"><span class="logo">✦</span> Walkers TVS</div>
+    <div id="navArea"></div>
+    <div class="nav-foot" id="navFoot"></div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb">TVS / <b id="crumb">Dashboard</b></div>
+      <div class="topbar-spacer"></div>
+      <div id="coSwitch" class="co-switch">
+        <button id="coWTL" class="on" onclick="setCo('WTL')">WTL</button>
+        <button id="coWBTL" onclick="setCo('WBTL')">WBTL</button>
+      </div>
+      <button class="icon-btn" onclick="openAssumptions()" title="Assumptions encoded in this prototype">A?</button>
+      <button class="icon-btn" onclick="go('notifications')" title="Notifications">◔<span class="badge" id="notifBadge">3</span></button>
+      <div class="role-chip">
+        <span class="avatar" id="roleAv">TV</span>
+        <select id="roleSelect" onchange="setRole(this.value)">
+          <option>Technical Visit Team</option>
+          <option>Finance Team</option>
+          <option>Finance Manager</option>
+          <option>Shop / Supplier</option>
+          <option>Guide / Chauffeur</option>
+          <option>Management</option>
+          <option>IT / Administrator</option>
+        </select>
+      </div>
+    </header>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<div id="modalRoot"></div>
+<div class="toast-wrap" id="toastRoot"></div>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+const state={ role:'Technical Visit Team', co:'WTL', view:'dashboard', shopTab:'Overview', vTab:'All', setTab:'Queue', repCat:'Operational', adminTab:'Users', guideTab:'guideTours', wizStep:0 };
+const $=s=>document.querySelector(s);
+const isInternal=r=>['Technical Visit Team','Finance Team','Finance Manager','Management','IT / Administrator'].includes(r);
+const coName=()=>state.co==='WTL'?'Walkers Tours Ltd':'Whittall Boustead Travel Ltd';
+const initials=r=>({'Technical Visit Team':'TV','Finance Team':'FT','Finance Manager':'FM','Shop / Supplier':'SH','Guide / Chauffeur':'GU','Management':'MG','IT / Administrator':'IT'}[r]||'U');
+
+/* ASSUMPTIONS (A1–A11) */
+const ASSUMPTIONS={
+ A1:['Allocation = TV-Team driven','The Technical Visit Team allocates vouchers; the system assists by showing shop availability, location/category fit and ratings. Not a fully automated allocation engine.'],
+ A2:['OKLO is the guide master','Guides sync from OKLO (read-only) with a create-if-missing fallback in the TVS. Only availability & ratings are TVS-owned.'],
+ A3:['Guides confirm, not decline','Guides confirm allocations; if they cannot take one they flag it and the TV Team reassigns. No self-service decline-and-requeue in v1.'],
+ A4:['Lead guide records the sale','Multi-guide tours have one designated lead who records the sale; company commission is unaffected by guide count.'],
+ A5:['Guide earnings read-only','Earnings are shown for transparency; actual guide payout is settled outside the TVS.'],
+ A6:['Revenue rules: category + market','Per-category commission per company, with an optional market-level override that takes precedence. Per-agreement rules are Phase 2.'],
+ A7:['Guide-managed availability','Availability is set by the guide in the TVS and is advisory at allocation; not OKLO-driven.'],
+ A8:['OKLO push + pull backstop','OKLO pushes service-line/voucher/guide events; a scheduled pull reconciles. Specs & sandbox confirmed in Phase 0.'],
+ A9:['SAP via API (IDoc accepted)','Financial documents post via API (OData/BAPI); IDoc accepted if that is the JKG standard. Error handling with retry.'],
+ A10:['One app, company-scoped','Single instance with company-scoped data + view switch + separate serials & finance feeds — not multi-tenant. Migrate active/open data only.'],
+ A11:['RBAC superset of roles','The fuller TDD role list is authoritative, plus the Guide/Chauffeur persona; roles are configurable.']
+};
+function aBadge(id){return `<span class="abadge" onclick="event.stopPropagation();showAssumption('${id}')" title="Encodes an assumption">◆ ${id}</span>`;}
+function showAssumption(id){const a=ASSUMPTIONS[id];modal(`<div class="modal-head"><h3>Assumption ${id} — ${a[0]}</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="note"><span class="ic">◆</span><div>${a[1]}</div></div><p class="small muted mt12">This is a deliberate, low-effort default carried into the proposal. It can be revisited in Phase 0 discovery without reshaping the architecture.</p></div><div class="modal-foot"><button class="btn btn-primary" onclick="closeModal()">Got it</button></div>`);}
+function openAssumptions(){const rows=Object.keys(ASSUMPTIONS).map(k=>`<tr><td class="cellname">${k}</td><td><b>${ASSUMPTIONS[k][0]}</b><div class="small muted">${ASSUMPTIONS[k][1]}</div></td></tr>`).join('');modal(`<div class="modal-head"><h3>Assumptions encoded in this prototype</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><p class="small muted mb12">Screens that depend on one of these show a ◆ badge. Each is a logical, low-effort default; Phase-2 alternatives are noted in the requirements document.</p><div class="table-wrap"><table><thead><tr><th>#</th><th>Assumption</th></tr></thead><tbody>${rows}</tbody></table></div></div><div class="modal-foot"><button class="btn btn-primary" onclick="closeModal()">Close</button></div>`,'wide');}
+
+/* ============================================================
+   SAMPLE DATA
+   ============================================================ */
+const CATS=['Gem','Spice','Handicraft','Tea','Silk','Batik','Wood','Porcelain','Cloth','Mall','Experience Centers'];
+
+const SHOPS=[
+ {id:'S1',name:'ABC Gems',cat:'Gem',loc:'Colombo, Western',co:'WTL',comm:'10%',status:'Active',rating:4.6,deposit:'LKR 250,000',agreement:'Signed online'},
+ {id:'S2',name:'Spice Haven',cat:'Spice',loc:'Matale, Central',co:'WTL',comm:'8%',status:'Active',rating:4.3,deposit:'—',agreement:'Signed online'},
+ {id:'S3',name:'Ceylon Batik',cat:'Batik',loc:'Galle, Southern',co:'WTL',comm:'12%',status:'Active',rating:4.1,deposit:'—',agreement:'Offline (filed)'},
+ {id:'S4',name:'Royal Tea Co.',cat:'Tea',loc:'Nuwara Eliya, Central',co:'WTL',comm:'9%',status:'Active',rating:4.7,deposit:'—',agreement:'Signed online'},
+ {id:'S5',name:'Ceylon Gem House',cat:'Gem',loc:'Colombo, Western',co:'WTL',comm:'10%',status:'Pending approval',rating:0,deposit:'LKR 250,000',agreement:'Awaiting'},
+ {id:'S6',name:'Island Handicrafts',cat:'Handicraft',loc:'Kandy, Central',co:'WBTL',comm:'11%',status:'Active',rating:4.0,deposit:'—',agreement:'Signed online'}
+];
+
+const GUIDES=[
+ {id:'G1',name:'John Silva',type:'Chauffeur',lang:'English, German',lic:'CG-4471 (exp 12/2027)',veh:'Van · 8 pax · WP-CAB-2231',rating:4.8,tours:128,phone:'+94 77 123 4567',avail:'Available',oklo:'OKLO-7741'},
+ {id:'G2',name:'Nimal Perera',type:'National',lang:'English, French',lic:'NG-2210 (exp 06/2026)',veh:'—',rating:4.5,tours:96,phone:'+94 71 884 1290',avail:'Available',oklo:'OKLO-7752'},
+ {id:'G3',name:'Lara Fernando',type:'National',lang:'English, Italian',lic:'NG-3318 (exp 03/2027)',veh:'—',rating:4.2,tours:74,phone:'+94 76 552 7781',avail:'Busy (10–14 Apr)',oklo:'OKLO-7760'},
+ {id:'G4',name:'Saman Kumara',type:'Chauffeur',lang:'English',lic:'CG-5512 (exp 09/2026)',veh:'Car · 3 pax · WP-CAR-9087',rating:4.0,tours:51,phone:'+94 70 220 9913',avail:'Available',oklo:'OKLO-7769'},
+ {id:'G5',name:'Ishara Madushani',type:'National',lang:'English, Japanese',lic:'NG-4402 (exp 11/2026)',veh:'—',rating:4.6,tours:88,phone:'+94 77 901 2255',avail:'Available',oklo:'(created in TVS)'}
+];
+
+/* vouchers: serial,tour,date,market,agent,shop,guide,pax,sales,comm,status,stage,co */
+const VCH=[
+ {id:'V010',ser:'WTL-2026-0010',tour:'T1020',date:'10 Apr 2026',market:'UK',agent:'Group A',shop:'',guide:'',pax:6,sales:null,status:'Unallocated',stage:'Create',co:'WTL',dup:true},
+ {id:'V021',ser:'WTL-2026-0021',tour:'T1044',date:'12 Apr 2026',market:'Germany',agent:'Group C',shop:'',guide:'',pax:4,sales:null,status:'Unallocated',stage:'Create',co:'WTL'},
+ {id:'V006',ser:'WTL-2026-0006',tour:'T1008',date:'06 Apr 2026',market:'UK',agent:'Group A',shop:'Spice Haven',guide:'Lara Fernando',pax:8,sales:null,status:'In progress',stage:'Allocate',co:'WTL'},
+ {id:'V002',ser:'WTL-2026-0002',tour:'T1002',date:'02 Apr 2026',market:'France',agent:'Group B',shop:'Ceylon Batik',guide:'Nimal Perera',pax:2,sales:null,status:'Pending sales',stage:'Update',co:'WTL'},
+ {id:'V001',ser:'WTL-2026-0001',tour:'T1001',date:'01 Apr 2026',market:'UK',agent:'Group A',shop:'ABC Gems',guide:'John Silva',pax:4,sales:'LKR 370,000',status:'Completed',stage:'Complete',co:'WTL'},
+ {id:'V004',ser:'WTL-2026-0004',tour:'T1005',date:'04 Apr 2026',market:'Italy',agent:'Group D',shop:'Royal Tea Co.',guide:'John Silva',pax:5,sales:'LKR 760,000',status:'Completed',stage:'Complete',co:'WTL'},
+ {id:'V003',ser:'WTL-2026-0003',tour:'T1004',date:'03 Apr 2026',market:'UK',agent:'Group A',shop:'ABC Gems',guide:'Saman Kumara',pax:3,sales:'LKR 0 (zero entry)',status:'Completed',stage:'Complete',co:'WTL'},
+ {id:'V009',ser:'WTL-2026-0009',tour:'T1015',date:'09 Apr 2026',market:'Germany',agent:'Group C',shop:'Spice Haven',guide:'Ishara Madushani',pax:7,sales:'LKR 88,000',status:'Pending sales',stage:'Payment',co:'WTL'},
+ {id:'V015',ser:'WTL-2026-0015',tour:'T1030',date:'08 Apr 2026',market:'UK',agent:'Group A',shop:'',guide:'',pax:5,sales:null,status:'On hold',stage:'Allocate',co:'WTL',hold:true},
+ {id:'V007',ser:'WTL-2026-0007',tour:'T1011',date:'05 Apr 2026',market:'France',agent:'Group B',shop:'Ceylon Batik',guide:'Nimal Perera',pax:2,sales:null,status:'Cancelled',stage:'Allocate',co:'WTL'},
+ {id:'W001',ser:'WBTL-2026-0001',tour:'T2001',date:'05 Apr 2026',market:'Japan',agent:'Group E',shop:'Island Handicrafts',guide:'Ishara Madushani',pax:6,sales:'LKR 145,000',status:'Completed',stage:'Complete',co:'WBTL'},
+ {id:'W002',ser:'WBTL-2026-0002',tour:'T2004',date:'11 Apr 2026',market:'Japan',agent:'Group E',shop:'',guide:'',pax:3,sales:null,status:'Unallocated',stage:'Create',co:'WBTL'}
+];
+const vco=()=>VCH.filter(v=>v.co===state.co);
+
+const NOTIFS=[
+ {t:'Voucher WTL-2026-0010 — tour in 4 days, still unallocated',time:'10 min ago',type:'red',ic:'!'},
+ {t:'Sales recorded by Spice Haven on WTL-2026-0009',time:'1 hr ago',type:'blue',ic:'⊞'},
+ {t:'SAP posting failed for WTL-2026-0051 — cost centre missing',time:'2 hr ago',type:'amber',ic:'⇄'},
+ {t:'Gem Authority licence for ABC Gems expires in 30 days',time:'Today',type:'amber',ic:'◷'},
+ {t:'Discount approval requested by Ceylon Batik (LKR 4,000)',time:'Yesterday',type:'purple',ic:'%'}
+];
+
+const APPROVALS=[
+ {id:'AP1',type:'Discount',who:'Ceylon Batik',amt:'LKR 4,000',req:'02 Apr',level:'Finance Manager',status:'Awaiting you'},
+ {id:'AP2',type:'Shop creation',who:'Ceylon Gem House',amt:'—',req:'01 Apr',level:'Finance Manager',status:'Awaiting you'},
+ {id:'AP3',type:'Refund',who:'ABC Gems',amt:'LKR 15,000',req:'31 Mar',level:'TV Team (Market Head)',status:'In review'},
+ {id:'AP4',type:'Adjustment',who:'Royal Tea Co.',amt:'LKR 22,000',req:'30 Mar',level:'Completed',status:'Approved'}
+];
+
+const ISSUES=[
+ {id:'IS1',by:'Spice Haven (Shop)',cat:'Sales entry',desc:'Cannot edit pax after submit',status:'Open',team:'TV Team'},
+ {id:'IS2',by:'John Silva (Guide)',cat:'QR scan',desc:'QR not opening on older phone',status:'In progress',team:'IT'},
+ {id:'IS3',by:'ABC Gems (Shop)',cat:'Document upload',desc:'PLI upload rejected',status:'Resolved',team:'TV Team'}
+];
+
+const AUDIT=[
+ {time:'10:42',who:'system',act:'SAP posting V051 failed — cost centre missing','st':'Failed'},
+ {time:'10:31',who:'OKLO',act:'Service line import (14 records)','st':'OK'},
+ {time:'10:05',who:'Anil G. (TV Team)',act:'Allocated WTL-2026-0006 to Spice Haven / Lara Fernando','st':'OK'},
+ {time:'09:58',who:'system',act:'Revenue posting batch to SAP','st':'OK'},
+ {time:'09:30',who:'Dinika B. (Finance Mgr)',act:'Approved adjustment AP4 (Royal Tea Co.)','st':'OK'}
+];
+
+const REPORTS={
+ Operational:['Monthly TV Voucher Report','Unallocated Voucher Report','Pending Voucher Report','Sales Report','Remittance Statement','Monthly & Quarterly TV Report'],
+ 'Master data':['Shop Master','Market Master','Guide Master','Shop Type Master','Agent Master'],
+ Finance:['SAP Posting Status','SAP Monthly Revenue','Shop Outstanding Statement (aging)']
+};
+
+/* ============================================================
+   NAV CONFIG (true RBAC)
+   ============================================================ */
+const NAV={
+ 'Technical Visit Team':[
+   ['Operations',[['dashboard','Dashboard','◧'],['registrations','Registrations','✎'],['shops','Shops & suppliers','⌂'],['guides','Guides','⊙'],['vouchers','Vouchers','▤'],['sales','Sales monitor','⊞']]],
+   ['Finance & control',[['settlement','Settlement','$'],['approvals','Approvals','✓']]],
+   ['Insights',[['reports','Reports','▦'],['notifications','Notifications','◔']]]
+ ],
+ 'Finance Team':[
+   ['Finance',[['dashboard','Dashboard','◧'],['settlement','Settlement','$'],['statements','Statements','▤'],['outstanding','Outstanding & aging','◴'],['sap','SAP posting','⇄']]],
+   ['Insights',[['reports','Finance reports','▦'],['notifications','Notifications','◔']]]
+ ],
+ 'Finance Manager':[
+   ['Approvals',[['approvals','Approvals','✓']]],
+   ['Insights',[['dashboard','Dashboard','◧'],['reports','Reports','▦'],['notifications','Notifications','◔']]]
+ ],
+ 'Shop / Supplier':[
+   ['My business',[['shopHome','My shop','⌂'],['shopVisits','Visits & vouchers','▤'],['shopSales','Record sales','⊞'],['shopSettlements','Settlements','$']]],
+   ['More',[['shopRatings','Ratings','★'],['issue','Raise an issue','✎'],['notifications','Notifications','◔']]]
+ ],
+ 'Guide / Chauffeur':[
+   ['My work',[['guidePortal','Guide app','▤']]]
+ ],
+ 'Management':[
+   ['Insights',[['dashboard','Dashboard','◧'],['reports','Reports','▦']]]
+ ],
+ 'IT / Administrator':[
+   ['Administration',[['users','Users & RBAC','⚙'],['integrations','Integrations','⇄'],['settings','Settings','⚒'],['issues','Issues','◎'],['audit','Audit log','▣']]],
+   ['Insights',[['dashboard','Dashboard','◧']]]
+ ]
+};
+const homeOf=r=>NAV[r][0][1][0][0];
+
+/* ============================================================
+   SHELL RENDER
+   ============================================================ */
+function enterApp(){
+  state.role=$('#loginRole').value;
+  $('#roleSelect').value=state.role;
+  $('#login').classList.add('hidden');
+  $('#app').classList.remove('hidden');
+  applyRole();
+}
+function setRole(r){ state.role=r; $('#roleSelect').value=r; applyRole(); }
+function applyRole(){
+  $('#roleAv').textContent=initials(state.role);
+  $('#coSwitch').style.display=isInternal(state.role)?'flex':'none';
+  if(!isInternal(state.role)){ if(state.role==='Shop / Supplier') state.co='WTL'; }
+  buildNav();
+  go(homeOf(state.role));
+}
+function buildNav(){
+  const groups=NAV[state.role]||[];
+  $('#navArea').innerHTML=groups.map(g=>`
+    <div class="nav-group-label">${g[0]}</div>
+    ${g[1].map(it=>`<a class="nav-item" data-nav="${it[0]}" onclick="go('${it[0]}')"><span class="ic">${it[2]}</span> ${it[1]}</a>`).join('')}
+  `).join('');
+  $('#navFoot').innerHTML=isInternal(state.role)
+    ? `<span class="dot" style="background:#3ad08a"></span>OKLO · synced 2 min ago<br><span class="dot" style="background:#e0a93b"></span>SAP · 97% posting success`
+    : `<span class="dot" style="background:#3ad08a"></span>You are signed in as<br>${state.role}`;
+}
+function setActive(view){ document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.nav===view)); }
+
+function go(view){
+  state.view=view;
+  setActive(view);
+  const fn=SCREENS[view];
+  $('#content').innerHTML = fn?fn():`<div class="empty">Screen not available for this role.</div>`;
+  const label=(NAV[state.role].flatMap(g=>g[1]).find(i=>i[0]===view)||[,view])[1]||view;
+  $('#crumb').textContent=label;
+  window.scrollTo(0,0);
+}
+function setPage(html){ $('#content').innerHTML=html; window.scrollTo(0,0); }
+function setCo(c){ state.co=c; $('#coWTL').classList.toggle('on',c==='WTL'); $('#coWBTL').classList.toggle('on',c==='WBTL'); go(state.view); }
+
+/* MODAL / TOAST */
+function modal(html,cls=''){ $('#modalRoot').innerHTML=`<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal ${cls}">${html}</div></div>`; }
+function closeModal(){ $('#modalRoot').innerHTML=''; }
+function toast(title,msg){ const d=document.createElement('div'); d.className='toast'; d.innerHTML=`<span class="ti">✓</span><div><b>${title}</b><span>${msg||''}</span></div>`; $('#toastRoot').appendChild(d); setTimeout(()=>d.remove(),3600); }
+
+/* small helpers */
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+const dl=(k,v)=>`<div class="dl"><div class="k">${k}</div><div class="v">${v}</div></div>`;
+const r2=(k,v)=>`<div class="row2"><span class="k">${k}</span><span class="bn">${v}</span></div>`;
+const statusPill=s=>({'Unallocated':'p-red','In progress':'p-blue','Pending sales':'p-amber','Completed':'p-green','On hold':'p-purple','Cancelled':'p-gray'}[s]||'p-gray');
+const step=(n,c)=>`<div class="step ${c}"><div class="line"></div><div class="dot-s">${c==='done'?'✓':''}</div><div class="nm-s">${n}</div></div>`;
+function lifecycle(stage){const stages=['Create','Allocate','Update','Payment','Complete'];const i=stages.indexOf(stage);return `<div class="stepper">${stages.map((s,k)=>step(s,k<i?'done':k===i?'current':'')).join('')}</div>`;}
+function tabbar(items,active,fn){return `<div class="tabbar">${items.map(t=>`<div class="tab ${t===active?'on':''}" onclick="${fn}('${t}')">${t}</div>`).join('')}</div>`;}
+function kpi(label,val,trend,bg,col,ic){return `<div class="kpi"><div class="ic" style="background:${bg};color:${col}">${ic}</div><div class="v">${val}</div><div class="l">${label}</div>${trend?`<div class="t" style="color:${col}">${trend}</div>`:''}</div>`;}
+function table(head,rows){return `<div class="card"><div class="table-wrap"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div></div>`;}
+function barChart(data){const max=Math.max(...data.map(d=>d[1]));return `<div class="bars">${data.map(d=>`<div class="bar"><div class="b" style="height:${Math.round(d[1]/max*110)}px"></div><div class="bl">${d[0]}</div></div>`).join('')}</div>`;}
+function donut(pcts){ // pcts: [[label,val,color],...]
+  let total=pcts.reduce((a,b)=>a+b[1],0),acc=0,segs='';const R=52,C=2*Math.PI*R;
+  pcts.forEach(p=>{const frac=p[1]/total;segs+=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${p[2]}" stroke-width="20" stroke-dasharray="${(frac*C).toFixed(1)} ${C}" stroke-dashoffset="${(-acc*C).toFixed(1)}" transform="rotate(-90 70 70)"></circle>`;acc+=frac;});
+  const leg=pcts.map(p=>`<div style="display:flex;align-items:center;gap:7px;font-size:12px;margin-bottom:5px"><span style="width:10px;height:10px;border-radius:3px;background:${p[2]}"></span>${p[0]} <b style="margin-left:auto">${p[1]}</b></div>`).join('');
+  return `<div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><svg width="140" height="140">${segs}</svg><div style="flex:1;min-width:140px">${leg}</div></div>`;
+}
+const up=(t,s)=>`<div class="upload"><div class="uic">⤒</div><div class="meta"><b>${t}</b><div>${s}</div></div><button class="btn btn-ghost btn-sm">Browse</button></div>`;
+const docRow=(t,s,c,st)=>`<div class="upload" style="border-style:solid;background:#fff"><div class="uic">▤</div><div class="meta"><b>${t}</b><div>${s}</div></div>${pill(c,st)}</div>`;
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+const SCREENS={};
+
+/* ---------- DASHBOARD (role-aware) ---------- */
+SCREENS.dashboard=()=>{
+  const total=vco().length, unalloc=vco().filter(v=>v.status==='Unallocated').length;
+  const head=`<div class="page-head"><div><h1>Dashboard</h1><div class="desc">${coName()} · ${state.role} · live view</div></div>
+    <div class="head-actions"><button class="filter-chip">Date range ▾</button><button class="filter-chip">Market ▾</button><button class="filter-chip">Agent ▾</button></div></div>`;
+  if(state.role==='Finance Team'||state.role==='Finance Manager'){
+    return head+`
+    <div class="kpis four" style="margin-bottom:16px">
+      ${kpi('Pending settlements','11','awaiting finance','var(--blue-bg)','var(--blue)','$')}
+      ${kpi('Posted to SAP today','LKR 1.25M','real-time','var(--green-bg)','var(--green)','⇄')}
+      ${kpi('SAP posting success','97%','1 failed · retry','var(--amber-bg)','var(--amber)','◷')}
+      ${kpi('Outstanding (90+)','LKR 10,000','aging','var(--red-bg)','var(--red)','◴')}
+    </div>
+    <div class="grid two-col">
+      <div class="card card-pad"><div class="section-title mb12">Revenue posted to SAP (LKR '000)</div>${barChart([['Mon',420],['Tue',610],['Wed',540],['Thu',880],['Fri',1250],['Sat',760]])}</div>
+      <div class="card card-pad"><div class="section-title mb12">Settlement stage mix</div>${donut([['TV verify',24,'#bd7d12'],['Finance check',11,'#2f80e0'],['Posted',62,'#1f9d63']])}</div>
+    </div>`;
+  }
+  if(state.role==='Management'){
+    return head+`
+    <div class="kpis four" style="margin-bottom:16px">
+      ${kpi('Total vouchers',String(total),'this month','var(--brand-soft)','var(--brand)','▤')}
+      ${kpi('Total sales','LKR 2.16M','▲ 14%','var(--green-bg)','var(--green)','⊞')}
+      ${kpi('Total commission','LKR 214K','▲ 11%','var(--green-bg)','var(--green)','$')}
+      ${kpi('Unallocated',String(unalloc),'needs attention','var(--red-bg)','var(--red)','!')}
+    </div>
+    <div class="grid two-col">
+      <div class="card card-pad"><div class="section-title mb12">Sales trend (LKR '000)</div>${barChart([['Jan',1800],['Feb',1500],['Mar',2100],['Apr',2160]])}</div>
+      <div class="card card-pad"><div class="section-title mb12">Market performance</div>${donut([['UK',46,'#1f5fae'],['Germany',22,'#2f80e0'],['France',16,'#13796b'],['Italy',9,'#bd7d12'],['Japan',7,'#6d4a9c']])}</div>
+    </div>
+    <div class="card card-pad mt16"><div class="section-title mb12">Top performing shops & guides</div>
+      <div class="grid two-col">
+        ${table(['Shop','Sales','Rating'],SHOPS.slice(0,4).map(s=>`<tr><td class="cellname">${s.name}</td><td class="bn">LKR ${(Math.random()*900+200|0)},000</td><td><span class="stars">★</span> ${s.rating}</td></tr>`).join(''))}
+        ${table(['Guide','Tours','Rating'],GUIDES.slice(0,4).map(g=>`<tr><td class="cellname">${g.name}</td><td>${g.tours}</td><td><span class="stars">★</span> ${g.rating}</td></tr>`).join(''))}
+      </div></div>`;
+  }
+  /* TV Team / IT default */
+  return head+`
+  <div class="kpis four" style="margin-bottom:16px">
+    ${kpi('Total vouchers',String(total),'this month','var(--brand-soft)','var(--brand)','▤')}
+    ${kpi('Allocated',String(vco().filter(v=>!['Unallocated','Cancelled'].includes(v.status)).length),'on track','var(--blue-bg)','var(--blue)','✓')}
+    ${kpi('Unallocated',String(unalloc),'pre-tour alerts','var(--red-bg)','var(--red)','!')}
+    ${kpi('Pending settlements','11','to verify','var(--amber-bg)','var(--amber)','$')}
+  </div>
+  <div class="grid two-col" style="margin-bottom:16px">
+    <div class="card card-pad"><div class="section-title mb12">Voucher status distribution</div>${donut([['Completed',5,'#1f9d63'],['In progress',2,'#2f80e0'],['Pending sales',2,'#bd7d12'],['Unallocated',2,'#cf4338'],['On hold',1,'#6d4a9c']])}</div>
+    <div class="card card-pad"><div class="section-title mb12">Sales trend (LKR '000)</div>${barChart([['Mon',180],['Tue',360],['Wed',290],['Thu',470],['Fri',520],['Sat',310]])}</div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div class="section-title">Vouchers needing attention</div><button class="btn btn-soft btn-sm" onclick="go('vouchers')">All vouchers →</button></div>
+    <div class="table-wrap"><table><thead><tr><th>Voucher</th><th>Tour</th><th>Service date</th><th>Status</th><th>Days to tour</th></tr></thead><tbody>
+    ${vco().filter(v=>['Unallocated','On hold'].includes(v.status)).map(v=>`<tr class="clickable" onclick="openVoucher('${v.id}')"><td class="cellname">${v.ser}</td><td>${v.tour}</td><td>${v.date}</td><td>${pill(statusPill(v.status),v.status)}</td><td><span class="pill p-amber">4 days</span></td></tr>`).join('')}
+    </tbody></table></div></div>`;
+};
+
+/* ---------- REGISTRATIONS (TV) ---------- */
+SCREENS.registrations=()=>`
+  <div class="page-head"><div><h1>Registrations &amp; onboarding</h1><div class="desc">Shop self-registrations awaiting review · routing: Shop → TV Team → Finance Manager</div></div>
+  <div class="head-actions"><button class="btn btn-primary btn-sm" onclick="startOnboarding()">＋ Onboard a shop</button></div></div>
+  <div class="note mb12"><span class="ic">✦</span><div>Shops self-register via a public link on web/mobile, then enter the approval ladder. The wizard below shows the full onboarding flow.</div></div>
+  ${table(['Applicant','Category','Location','Submitted','Stage'],[
+    ['Ceylon Gem House','Gem','Colombo, Western','01 Apr 2026',pill('p-amber','TV Team review')],
+    ['Lanka Silk Studio','Silk','Kandy, Central','31 Mar 2026',pill('p-blue','Finance Manager')],
+    ['Ocean Porcelain','Porcelain','Galle, Southern','30 Mar 2026',pill('p-green','Approved')]
+  ].map(r=>`<tr class="clickable" onclick="openOnboardingReview('${r[0]}')"><td class="cellname">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join(''))}`;
+
+function openOnboardingReview(name){
+  modal(`<div class="modal-head"><h3>${name} — onboarding review</h3><button class="icon-btn" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <div class="ladder mb12">
+      <div class="lad ok"><div class="rail"><div class="node">✓</div><div class="stem"></div></div><div class="body"><div class="t">Shop — submitted</div><div class="s">Details, documents & consent provided</div></div></div>
+      <div class="lad cur"><div class="rail"><div class="node">2</div><div class="stem"></div></div><div class="body"><div class="t">Technical Visit Team (Market Head)</div><div class="s">Your review — verify documents & inspection</div></div></div>
+      <div class="lad wait"><div class="rail"><div class="node">3</div></div><div class="body"><div class="t">Finance Manager</div><div class="s">Final approval & finance account (SSC) creation</div></div></div>
+    </div>
+    <div class="card card-pad"><div class="section-title mb12">Submitted documents</div>
+      ${docRow('Business Registration','exp 31 Dec 2026','p-green','Valid')}
+      ${docRow('SLTDA Licence','exp 30 Sep 2026','p-green','Valid')}
+      ${docRow('Gem Authority Licence','exp 30 Aug 2026','p-amber','Expiring')}
+      ${docRow('Public Liability Insurance','pending review','p-blue','In review')}
+    </div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-danger" onclick="closeModal();toast('Returned to shop','Flagged fields sent back for correction.')">Return for correction</button><button class="btn btn-primary" onclick="closeModal();toast('Forwarded','Sent to Finance Manager for final approval.')">Approve &amp; forward →</button></div>`,'wide');
+}
+
+/* onboarding wizard */
+const WIZ=['Shop details','Locations & categories','Documents','Inspection & deposit','Agreement & consent','Review'];
+function startOnboarding(){ state.wizStep=0; renderWiz(); }
+function renderWiz(){
+  modal(`<div class="modal-head"><h3>Onboard a shop</h3><button class="icon-btn" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <div class="wiz-steps">${WIZ.map((w,i)=>`<div class="ws ${i===state.wizStep?'active':''} ${i<state.wizStep?'complete':''}"><span class="n">${i<state.wizStep?'✓':i+1}</span>${w}</div>`).join('')}</div>
+    ${wizBody()}
+  </div>
+  <div class="modal-foot">${state.wizStep>0?'<button class="btn btn-ghost" onclick="state.wizStep--;renderWiz()">← Back</button>':'<span></span>'}
+  ${state.wizStep<5?'<button class="btn btn-primary" onclick="state.wizStep++;renderWiz()">Continue →</button>':'<button class="btn btn-success" onclick="finishWiz()">Submit for approval ✓</button>'}</div>`,'wide');
+}
+function wizBody(){
+  const s=state.wizStep;
+  if(s===0)return `<div class="form-grid"><div class="field"><label>Shop name</label><input placeholder="Ceylon Gem House"></div><div class="field"><label>Primary category</label><select>${CATS.map(c=>`<option>${c}</option>`).join('')}</select></div><div class="field"><label>Contact person</label><input></div><div class="field"><label>Mobile</label><input placeholder="+94..."></div><div class="field full"><label>Registration channel</label><input value="Public self-registration link (web & mobile)" disabled></div></div>`;
+  if(s===1)return `<div class="small muted mb12">Multiple locations &amp; categories under one account — no re-registration. Commission can differ per category.</div>${table(['Location','Province','District','Categories'],[['Colombo flagship','Western','Colombo','Gem, Handicraft'],['Galle branch','Southern','Galle','Gem']].map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join(''))}<button class="btn btn-soft btn-sm mt12">＋ Add location</button>`;
+  if(s===2)return `<div class="small muted mb12">Upload required documents — expiry &amp; annual-renewal alerts are automatic.</div>${up('Business Registration / ID','BR-2024-1182.pdf')}${up('SLTDA Licence','sltda.pdf')}${up('Gem Authority Licence','Required for gem shops')}${up('Ayurvedic Licence','If applicable')}${up('Public Liability Insurance (PLI)','Drag & drop or browse')}`;
+  if(s===3)return `<div class="field"><label>Onboarding inspection report</label><textarea rows="3" placeholder="Premises, display, compliance notes…"></textarea></div>${up('Shop images','Up to 10 photos')}<div class="field mt12"><label>Deposit held (if applicable, e.g. gems)</label><input placeholder="LKR 0"></div>`;
+  if(s===4)return `<div class="note mb12"><span class="ic">✦</span><div>Agreement shown for consent — online or offline signing supported.</div></div>
+    <div class="card card-pad" style="background:var(--surface-2);max-height:150px;overflow:auto;font-size:12.5px;color:var(--muted);line-height:1.7"><b style="color:var(--text)">Technical Visit Partner Agreement</b><br>Between ${coName()} and the Shop, governing commission rates, settlement timelines, conduct during technical visits, and document compliance…</div>
+    <label style="display:flex;gap:10px;align-items:center;margin-top:14px;font-size:13px"><input type="checkbox"> I accept the agreement and the PII / geo-location terms.</label>
+    <div class="small muted mt8">If declined, the relevant internal team is notified. Decision &amp; timestamp recorded for audit.</div>`;
+  return `<div class="card card-pad"><div class="detail-grid">${dl('Shop name','Ceylon Gem House')}${dl('Category','Gem')}${dl('Location','Colombo, Western')}${dl('Documents','5 uploaded')}${dl('Agreement','Accepted online')}${dl('Finance account','SSC format · ${state.co}')}</div></div>
+    <div class="note ok mt12"><span class="ic">✓</span><div>On submit, this enters the approval ladder: <b>Shop → Technical Visit Team → Finance Manager</b>, then a finance account is created in SSC format and linked to SAP master data.</div></div>`;
+}
+function finishWiz(){ closeModal(); toast('Submitted for approval','The shop has entered the approval ladder.'); }
+
+/* ---------- SHOPS ---------- */
+SCREENS.shops=()=>{
+  const list=SHOPS.filter(s=>s.co===state.co||state.co==='WTL'&&s.co!=='WBTL'? s.co===state.co : s.co===state.co);
+  const rows=SHOPS.filter(s=>s.co===state.co).map(s=>`<tr class="clickable" onclick="openShop('${s.id}')"><td class="cellname">${s.name}</td><td>${s.cat}</td><td>${s.loc}</td><td class="bn">${s.comm}</td><td>${s.rating?`<span class="stars">★</span> ${s.rating}`:'—'}</td><td>${pill(s.status==='Active'?'p-green':'p-amber',s.status)}</td></tr>`).join('');
+  return `<div class="page-head"><div><h1>Shops &amp; suppliers</h1><div class="desc">${coName()} · partner shops and their compliance status</div></div>
+    <div class="head-actions"><button class="btn btn-primary btn-sm" onclick="startOnboarding()">＋ Onboard a shop</button></div></div>
+    <div class="toolbar"><div class="search"><span>⌕</span><input placeholder="Search shop / category / location…"></div><button class="filter-chip">Category ▾</button><button class="filter-chip">Status ▾</button></div>
+    ${table(['Shop','Category','Location','Commission','Rating','Status'],rows||`<tr><td colspan="6" class="empty">No shops for ${state.co}.</td></tr>`)}`;
+};
+function openShop(id){
+  const s=SHOPS.find(x=>x.id===id); state.shopTab='Overview';
+  renderShop(s);
+}
+function renderShop(s){
+  const body=()=>{
+    if(state.shopTab==='Overview')return `<div class="card card-pad"><div class="detail-grid">${dl('Category',s.cat)}${dl('Location',s.loc)}${dl('Commission',s.comm+' ('+s.cat+')')}${dl('Agreement',s.agreement)}${dl('Company',s.co)}${dl('Status',pill(s.status==='Active'?'p-green':'p-amber',s.status))}</div></div>`;
+    if(state.shopTab==='Documents')return `<div class="card card-pad">${docRow('Business Registration','exp 31 Dec 2026','p-green','Valid')}${docRow('SLTDA Licence','exp 30 Sep 2026','p-green','Valid')}${docRow('Gem Authority Licence','exp 30 Aug 2026','p-amber','Expiring')}${docRow('Public Liability Insurance','pending review','p-blue','In review')}<button class="btn btn-soft btn-sm mt12">＋ Upload / renew</button></div>`;
+    if(state.shopTab==='Locations')return table(['Location','Province','District','Categories','Status'],[['Colombo flagship','Western','Colombo','Gem, Handicraft','Active'],['Galle branch','Southern','Galle','Gem','Active']].map(r=>`<tr><td class="cellname">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${pill('p-green',r[4])}</td></tr>`).join(''));
+    if(state.shopTab==='Inspections')return `<div class="card card-pad">${docRow('Onboarding inspection','12 Jan 2026 · passed','p-green','Filed')}${docRow('Tour inspection','03 Apr 2026 · minor notes','p-amber','Filed')}<button class="btn btn-soft btn-sm mt12">＋ Add inspection report</button></div>`;
+    if(state.shopTab==='Ratings')return `<div class="card card-pad"><div style="display:flex;gap:24px;align-items:center"><div><div style="font-family:Bricolage Grotesque;font-weight:700;font-size:34px">${s.rating||'—'}</div><div class="stars">★★★★★</div><div class="small muted">based on tours</div></div><div class="note" style="flex:1"><span class="ic">◆ A1</span><div>Ratings help identify top performers and may be considered when allocating future vouchers. ${aBadge('A1')}</div></div></div></div>`;
+    return `<div class="card card-pad"><div class="detail-grid">${dl('Deposit held',s.deposit)}${dl('Type','Gem deposit')}${dl('Last updated','01 Apr 2026')}</div></div>`;
+  };
+  setPage(`<div class="back" onclick="go('shops')">← Shops &amp; suppliers</div>
+  <div class="page-head"><div><h1>${s.name}</h1><div class="desc">${s.cat} · ${s.loc} · ${s.co}</div></div>
+  <div class="head-actions"><button class="btn btn-ghost btn-sm" onclick="go('issue')">Report issue</button><button class="btn btn-primary btn-sm" onclick="toast('Saved','Shop profile updated.')">Edit profile</button></div></div>
+  ${tabbar(['Overview','Documents','Locations','Inspections','Ratings','Deposit'],state.shopTab,'shopTabSet')}
+  <div id="shopBody">${body()}</div>`);
+  window._shopBody=body;
+}
+function shopTabSet(t){ state.shopTab=t; $('#shopBody').innerHTML=window._shopBody(); document.querySelectorAll('#content .tab').forEach(x=>x.classList.toggle('on',x.textContent.trim()===t)); }
+
+/* ---------- GUIDES (master data, TV view) ---------- */
+SCREENS.guides=()=>{
+  const rows=GUIDES.map(g=>`<tr class="clickable" onclick="openGuide('${g.id}')"><td class="cellname">${g.name}</td><td>${pill(g.type==='Chauffeur'?'p-blue':'p-purple',g.type)}</td><td>${g.lang}</td><td>${g.avail.startsWith('Available')?pill('p-green',g.avail):pill('p-amber',g.avail)}</td><td><span class="stars">★</span> ${g.rating}</td><td class="small muted">${g.oklo}</td></tr>`).join('');
+  return `<div class="page-head"><div><h1>Guides &amp; chauffeurs</h1><div class="desc">Synced from OKLO ${aBadge('A2')} · availability &amp; ratings managed in the TVS</div></div>
+    <div class="head-actions"><button class="btn btn-ghost btn-sm" onclick="toast('Sync triggered','Pulling latest guides from OKLO.')">⟳ Sync from OKLO</button><button class="btn btn-primary btn-sm" onclick="toast('Create guide','Create-if-missing fallback for a guide not yet in OKLO.')">＋ Create (fallback)</button></div></div>
+    <div class="note mb12"><span class="ic">◆</span><div>OKLO is the master for guide data. The TVS holds a synced copy plus a create-if-missing fallback used during allocation. ${aBadge('A2')}</div></div>
+    ${table(['Guide','Type','Languages','Availability','Rating','Source'],rows)}`;
+};
+function openGuide(id){
+  const g=GUIDES.find(x=>x.id===id);
+  setPage(`<div class="back" onclick="go('guides')">← Guides</div>
+  <div class="page-head"><div><h1>${g.name}</h1><div class="desc">${g.type} guide · ${g.oklo}</div></div></div>
+  <div class="grid two-col">
+    <div class="card card-pad"><div class="section-title mb12">Profile</div><div class="detail-grid">${dl('Contact',g.phone)}${dl('Type',g.type)}${dl('Languages',g.lang)}${dl('Licence',g.lic)}${dl('Vehicle',g.veh)}${dl('Availability',g.avail)}</div></div>
+    <div class="card card-pad"><div class="section-title mb12">Performance</div><div style="display:flex;gap:24px;align-items:center"><div><div style="font-family:Bricolage Grotesque;font-weight:700;font-size:32px">${g.rating}</div><div class="stars">★★★★★</div></div><div><div style="font-family:Bricolage Grotesque;font-weight:700;font-size:32px">${g.tours}</div><div class="small muted">tours delivered</div></div></div><div class="note mt12"><span class="ic">◆</span><div>Ratings may inform future allocation. ${aBadge('A1')}</div></div></div>
+  </div>`);
+}
+
+/* ---------- VOUCHERS ---------- */
+SCREENS.vouchers=()=>{
+  const tabs=['All','Unallocated','In progress','Pending sales','Completed','On hold','Cancelled'];
+  let list=vco(); if(state.vTab!=='All') list=list.filter(v=>v.status===state.vTab);
+  const rows=list.map(v=>`<tr class="clickable" onclick="openVoucher('${v.id}')"><td class="cellname">${v.ser}</td><td>${v.tour}</td><td>${v.date}</td><td>${v.market}</td><td>${v.shop||'<span class="muted">— unassigned</span>'}</td><td>${v.guide||'<span class="muted">—</span>'}</td><td>${v.pax}</td><td>${pill(statusPill(v.status),v.status)}</td></tr>`).join('')||`<tr><td colspan="8" class="empty">No vouchers in this view.</td></tr>`;
+  return `<div class="page-head"><div><h1>Vouchers</h1><div class="desc">${coName()} · serials kept separate per company ${aBadge('A10')} · Create → Allocate → Update → Payment → Complete</div></div>
+    <div class="head-actions"><button class="btn btn-ghost btn-sm" onclick="go('vouchers')">⟳ OKLO sync</button><button class="btn btn-primary btn-sm" onclick="openVoucher('V010')">Allocate next</button></div></div>
+    ${tabbar(tabs,state.vTab,'vTabSet')}
+    <div class="toolbar"><div class="search"><span>⌕</span><input placeholder="Voucher / tour / guide…"></div><button class="filter-chip">Market ▾</button><button class="filter-chip">Date range ▾</button></div>
+    ${table(['Voucher','Tour','Service date','Market','Shop','Guide','Pax','Status'],rows)}`;
+};
+function vTabSet(t){ state.vTab=t; go('vouchers'); }
+
+function openVoucher(id){
+  const v=VCH.find(x=>x.id===id)||VCH[0];
+  const allocated=!['Unallocated','On hold','Create'].includes(v.status)&&v.shop;
+  const completed=v.status==='Completed';
+  const cancelled=v.status==='Cancelled';
+  let panel;
+  if(completed){
+    panel=`<div class="card card-pad"><div class="section-title mb12">Financial summary</div>
+      ${r2('Sales amount',v.sales)}${r2('Company commission','LKR 37,000')}${r2('Agent / guide commission ◆ A5','LKR 18,500')}${r2('Discount','—')}
+      <div style="border-top:1px solid var(--line);margin-top:8px;padding-top:8px">${r2('<b>Net settled</b>','<b>LKR 351,500</b>')}</div>
+      <div class="note ok mt12"><span class="ic">⇄</span><div>Posted to SAP — reference <b>SAP12345</b>. Voucher archived for reporting &amp; audit.</div></div></div>`;
+  } else if(allocated){
+    panel=`<div class="card card-pad"><div class="section-title mb12">Allocation</div><div class="detail-grid">${dl('Shop',v.shop)}${dl('Guide',v.guide)}${dl('Pax',v.pax)}${dl('Service date',v.date)}</div>
+      <div class="note mt12"><span class="ic">✦</span><div>Editing stays open until a sales value is recorded. ${v.status==='Pending sales'?'Awaiting sales entry from shop/guide.':''}</div></div>
+      <div style="display:flex;gap:9px;margin-top:14px"><button class="btn btn-ghost" onclick="openEdit('${v.id}')">Edit (pre-sale)</button><button class="btn btn-soft" onclick="go('sales')">Record sales →</button></div></div>`;
+  } else {
+    panel=`<div class="card card-pad"><div class="section-title mb12">Allocation ${aBadge('A1')}</div>
+      <div class="form-grid">
+        <div class="field full"><label>Assign guide(s) — multi-guide supported, one lead ${aBadge('A4')}</label><select multiple style="height:74px"><option selected>John Silva — lead (Chauffeur · ★4.8)</option><option>Nimal Perera (National · ★4.5)</option><option>Lara Fernando (busy 10–14 Apr)</option></select></div>
+        <div class="field"><label>Assign shop (availability checked)</label><select><option>ABC Gems · available · ★4.6</option><option>Spice Haven · available · ★4.3</option><option>Ceylon Batik · busy</option></select></div>
+        <div class="field"><label>Pax count</label><input value="${v.pax}"></div>
+      </div>
+      <div class="note mt12"><span class="ic">◆</span><div>The Technical Visit Team allocates; the system shows availability, location/category fit and ratings as assistance. ${aBadge('A1')} If the guide isn't in the TVS, a create-if-missing path appears. ${aBadge('A2')}</div></div>
+      <div style="display:flex;gap:9px;margin-top:14px"><button class="btn btn-ghost" onclick="toast('Allocation held','On hold until the correct guide confirms.')">Hold allocation</button><button class="btn btn-primary" onclick="toast('Voucher allocated','Guide(s) notified via WhatsApp. Shop &amp; market staff alerted. Status → In progress.')">Allocate &amp; notify →</button></div></div>`;
+  }
+  setPage(`<div class="back" onclick="go('vouchers')">← Vouchers</div>
+  <div class="page-head"><div><h1>${v.ser}</h1><div class="desc">${coName()} · Tour ${v.tour} · ${v.market} market · ${v.pax} pax</div></div>
+  <div class="head-actions">
+    <button class="btn btn-ghost btn-sm" onclick="genPDF('${v.ser}')">⤓ PDF</button>
+    <button class="btn btn-ghost btn-sm" onclick="sendWA('${v.ser}')">Send WhatsApp/SMS</button>
+    ${!completed&&!cancelled?`<button class="btn btn-danger btn-sm" onclick="cancelVoucher('${v.ser}','${v.date}')">Cancel voucher</button>`:''}
+  </div></div>
+  ${v.dup?`<div class="note danger mb12"><span class="ic">⚠</span><div><b>Possible duplicate detected</b> — a voucher with the same tour and dates exists. Resolve before allocation.</div></div>`:''}
+  ${cancelled?`<div class="note warn mb12"><span class="ic">⊘</span><div>This voucher was <b>cancelled</b>. Reason on file: tour cancelled by agent.</div></div>`:''}
+  <div class="card card-pad">${lifecycle(v.stage)}</div>
+  <div class="grid two-col mt16">
+    ${panel}
+    <div class="card card-pad"><div class="section-title mb12">Details</div><div class="detail-grid" style="grid-template-columns:1fr">${dl('Voucher serial',v.ser)}${dl('Market',v.market)}${dl('Agent',v.agent)}${dl('Status',pill(statusPill(v.status),v.status))}${dl('QR / barcode','<span style="display:inline-block;width:56px;height:56px" class="qr-box"></span>')}${dl('Remarks','—')}</div></div>
+  </div>`);
+}
+function openEdit(id){const v=VCH.find(x=>x.id===id);modal(`<div class="modal-head"><h3>Edit voucher ${v.ser}</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="note warn mb12"><span class="ic">✦</span><div>Edits allowed until a sales value is recorded. After that, use the adjustment/approval path.</div></div><div class="form-grid"><div class="field"><label>Pax count</label><input value="${v.pax}"></div><div class="field"><label>Reassign guide</label><select><option>${v.guide}</option><option>Nimal Perera</option></select></div><div class="field full"><label>Reassign shop</label><select><option>${v.shop}</option><option>ABC Gems</option></select></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="closeModal();toast('Voucher updated','Affected parties re-notified.')">Save &amp; notify</button></div>`);}
+function genPDF(ser){modal(`<div class="modal-head"><h3>Voucher PDF · ${ser}</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="card card-pad" style="background:var(--surface-2)"><div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px"><b style="font-family:Bricolage Grotesque">${coName()} · Voucher</b><span class="small muted">${ser}</span></div><div class="detail-grid">${dl('Tour','T1020')}${dl('Pax','6')}${dl('Guide','John Silva')}${dl('Shop','ABC Gems')}${dl('Dates','10–14 Apr')}${dl('Market','UK')}</div><div style="text-align:center;margin-top:14px"><span class="qr-box" style="display:inline-block;width:84px;height:84px"></span></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Close</button><button class="btn btn-primary" onclick="closeModal();toast('Downloaded','Voucher PDF generated.')">⤓ Download PDF</button></div>`);}
+function sendWA(ser){modal(`<div class="modal-head"><h3>Send voucher ${ser}</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="field"><label>Send to</label><select><option>Guide — John Silva (+94 77 123 4567)</option><option>Market staff</option><option>Both</option></select></div><div class="field"><label>Channel</label><select><option>WhatsApp link</option><option>SMS link</option></select></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="closeModal();toast('Voucher link sent successfully','Delivered via WhatsApp.')">Send</button></div>`);}
+function cancelVoucher(ser,date){modal(`<div class="modal-head"><h3>Cancel voucher ${ser}</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="note warn mb12"><span class="ic">⚠</span><div>Cancellation is allowed up to <b>one day before</b> the tour (service date ${date}) and never after completion. A reason is mandatory.</div></div><div class="field"><label>Reason (required)</label><textarea rows="3" placeholder="e.g. tour cancelled by agent"></textarea></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Back</button><button class="btn btn-danger" onclick="closeModal();toast('Voucher cancelled','Affected stakeholders notified.')">Confirm cancellation</button></div>`);}
+
+/* ---------- SALES MONITOR (TV) ---------- */
+SCREENS.sales=()=>`
+  <div class="page-head"><div><h1>Sales monitor</h1><div class="desc">${coName()} · real-time sales captured by shops (web) and guides (QR)</div></div>
+  <div class="head-actions"><button class="filter-chip">Today ▾</button></div></div>
+  <div class="kpis three mb12">
+    ${kpi('Sales today','LKR 1.30M','▲ live','var(--green-bg)','var(--green)','⊞')}
+    ${kpi('Zero entries','3','recorded','var(--gray-bg)','var(--gray-tx)','○')}
+    ${kpi('Awaiting entry','2','pre-deadline','var(--amber-bg)','var(--amber)','◷')}
+  </div>
+  ${table(['Voucher','Shop','Captured by','Sales','Commission (co / agent)','Status'],[
+    ['WTL-2026-0009','Spice Haven','Guide · QR','LKR 88,000','8,800 / 4,400',pill('p-blue','New')],
+    ['WTL-2026-0001','ABC Gems','Shop · web','LKR 370,000','37,000 / 18,500',pill('p-green','Verified')],
+    ['WTL-2026-0003','ABC Gems','Guide · QR','LKR 0 (zero entry)','— / —',pill('p-gray','Zero')],
+    ['WTL-2026-0004','Royal Tea Co.','Shop · web','LKR 760,000','76,000 / 38,000',pill('p-green','Verified')]
+  ].map(r=>`<tr><td class="cellname">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="bn">${r[3]}</td><td class="bn">${r[4]}</td><td>${r[5]}</td></tr>`).join(''))}
+  <div class="note mt16"><span class="ic">✦</span><div>Agent and company commission are tracked separately and derived from the category rate. ${aBadge('A6')}</div></div>`;
+
+/* ---------- SETTLEMENT ---------- */
+SCREENS.settlement=()=>{
+  const rows=[
+    ['ABC Gems','LKR 370,000','37,000','Bank transfer','TV verify','p-amber'],
+    ['Spice Haven','LKR 775,000','77,500','Bank transfer','Finance check','p-blue'],
+    ['Ceylon Batik','LKR 185,000','18,500','Cash → cashier','TV verify','p-amber'],
+    ['Royal Tea Co.','LKR 760,000','76,000','Cheque','Posted','p-green']
+  ].map(r=>`<tr class="clickable" onclick="openSettle('${r[0]}','${r[1]}','${r[4]}')"><td class="cellname">${r[0]}</td><td class="bn">${r[1]}</td><td class="bn">${r[2]}</td><td>${r[3]}</td><td>${pill(r[5],r[4])}</td><td style="text-align:right"><button class="btn btn-soft btn-sm">Open</button></td></tr>`).join('');
+  return `<div class="page-head"><div><h1>Settlement</h1><div class="desc">${coName()} · Shop upload → TV verify → Finance bank validation → SAP posting · split for Walkers/Whittalls ${aBadge('A10')}</div></div>
+    <div class="head-actions"><button class="btn btn-ghost btn-sm" onclick="genStatement()">Generate statement</button><button class="btn btn-soft btn-sm" onclick="openRefund()">Refund / adjustment</button></div></div>
+    <div class="kpis three mb12">${kpi('Pending verification','24','TV queue','var(--amber-bg)','var(--amber)','◷')}${kpi('Awaiting finance','11','validate vs bank','var(--blue-bg)','var(--blue)','$')}${kpi('Posted to SAP today','LKR 1.25M','real-time','var(--green-bg)','var(--green)','⇄')}</div>
+    ${table(['Shop','Sales','Commission','Payment mode','Stage',''],rows)}`;
+};
+function openSettle(shop,amt,stage){
+  const stageIdx={'TV verify':1,'Finance check':2,'Posted':3}[stage]||1;
+  const ladder=['Shop upload','TV verify','Finance / bank','Post to SAP'].map((n,i)=>step(n,i<stageIdx?'done':i===stageIdx?'current':'')).join('');
+  setPage(`<div class="back" onclick="go('settlement')">← Settlement</div>
+  <div class="page-head"><div><h1>${shop}</h1><div class="desc">Settlement · ${amt} · ${coName()}</div></div></div>
+  <div class="card card-pad"><div class="stepper">${ladder}</div></div>
+  <div class="grid two-col mt16">
+    <div class="card card-pad"><div class="section-title mb12">Uploaded by shop</div>${docRow('Shop receipts','3 files','p-green','Received')}${docRow('Bank deposit slip','deposit-0412.pdf','p-green','Received')}${docRow('Agent commission detail','commission.xlsx','p-green','Received')}${docRow('Email approval','approval.eml','p-green','Received')}</div>
+    <div class="card card-pad"><div class="section-title mb12">Finance — bank validation</div>${r2('Expected deposit',amt)}${r2('Bank statement match',pill('p-green','Matched'))}${r2('Payment mode','Bank transfer')}<div class="note mt12"><span class="ic">◆</span><div>Data is split for Walkers / Whittalls before finance validation. ${aBadge('A10')}</div></div></div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:18px">
+    <button class="btn btn-ghost" onclick="toast('Forwarded','Sent to Finance for bank validation.')">Verify &amp; forward</button>
+    <button class="btn btn-primary" onclick="toast('Posted to SAP','Revenue &amp; settlement posted to SAP in real time.')">Validate &amp; post to SAP →</button>
+  </div>`);
+}
+function genStatement(){modal(`<div class="modal-head"><h3>Generate settlement statement</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="note mb12"><span class="ic">✦</span><div>Generated by <b>date range</b> — no dependency on batch IDs.</div></div><div class="form-grid"><div class="field"><label>From</label><input value="01 Apr 2026"></div><div class="field"><label>To</label><input value="30 Apr 2026"></div><div class="field"><label>Company</label><select><option>${state.co}</option></select></div><div class="field"><label>Shop (optional)</label><select><option>All shops</option><option>ABC Gems</option></select></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="closeModal();toast('Statement generated','Remittance statement ready to download.')">Generate</button></div>`);}
+function openRefund(){modal(`<div class="modal-head"><h3>Refund / adjustment</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="note warn mb12"><span class="ic">✦</span><div>Refunds and adjustments require a reason and route through the approval ladder, then post to SAP.</div></div><div class="form-grid"><div class="field"><label>Type</label><select><option>Refund</option><option>Adjustment</option></select></div><div class="field"><label>Amount (LKR)</label><input placeholder="0"></div><div class="field full"><label>Reason</label><textarea rows="2"></textarea></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="closeModal();toast('Submitted for approval','Routed to TV Team → Finance Manager.')">Submit</button></div>`);}
+
+/* ---------- STATEMENTS (Finance) ---------- */
+SCREENS.statements=()=>`
+  <div class="page-head"><div><h1>Statements</h1><div class="desc">${coName()} · date-range remittance &amp; payment statements (no batch dependency)</div></div>
+  <div class="head-actions"><button class="btn btn-primary btn-sm" onclick="genStatement()">＋ Generate statement</button></div></div>
+  ${table(['Statement','Period','Company','Shops','Total','Status'],[
+    ['REM-Apr-WTL','01–30 Apr 2026','WTL','12','LKR 2,090,000',pill('p-green','Ready')],
+    ['REM-Mar-WTL','01–31 Mar 2026','WTL','11','LKR 1,880,000',pill('p-green','Ready')],
+    ['REM-Apr-WBTL','01–30 Apr 2026','WBTL','3','LKR 410,000',pill('p-green','Ready')]
+  ].map(r=>`<tr class="clickable"><td class="cellname">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="bn">${r[4]}</td><td>${r[5]}</td></tr>`).join(''))}`;
+
+/* ---------- OUTSTANDING (Finance) ---------- */
+SCREENS.outstanding=()=>`
+  <div class="page-head"><div><h1>Outstanding &amp; aging</h1><div class="desc">${coName()} · shop balances by age bucket</div></div></div>
+  ${table(['Shop','Total due','0–30','31–60','61–90','90+','Last payment'],[
+    ['ABC Gems','LKR 100,000','50,000','30,000','10,000','10,000','01 Apr 2026'],
+    ['Spice Haven','LKR 42,000','42,000','—','—','—','03 Apr 2026'],
+    ['Ceylon Batik','LKR 65,000','20,000','25,000','20,000','—','28 Mar 2026']
+  ].map(r=>`<tr><td class="cellname">${r[0]}</td><td class="bn">${r[1]}</td><td class="bn">${r[2]}</td><td class="bn">${r[3]}</td><td class="bn">${r[4]}</td><td class="bn">${r[5]==='10,000'?'<span class="pill p-red">10,000</span>':r[5]}</td><td>${r[6]}</td></tr>`).join(''))}`;
+
+/* ---------- SAP POSTING (Finance) ---------- */
+SCREENS.sap=()=>`
+  <div class="page-head"><div><h1>SAP posting</h1><div class="desc">${coName()} · real-time posting of revenue, settlement, adjustment &amp; refund ${aBadge('A9')}</div></div>
+  <div class="head-actions"><button class="btn btn-soft btn-sm" onclick="toast('Retry queued','Failed SAP posting re-queued.')">Retry failed</button></div></div>
+  <div class="kpis three mb12">${kpi('Posted today','LKR 1.25M','real-time','var(--green-bg)','var(--green)','⇄')}${kpi('Success rate','97%','last 24h','var(--blue-bg)','var(--blue)','✓')}${kpi('Failed','1','retry available','var(--red-bg)','var(--red)','!')}</div>
+  ${table(['Voucher','Posting date','SAP reference','Amount','Status','Error'],[
+    ['WTL-2026-0050','05 Apr 2026','SAP12345','LKR 351,500',pill('p-green','Success'),'—'],
+    ['WTL-2026-0051','05 Apr 2026','—','LKR 720,000',pill('p-red','Failed'),'Cost centre missing'],
+    ['WBTL-2026-0001','05 Apr 2026','SAP12390','LKR 130,500',pill('p-green','Success'),'—']
+  ].map(r=>`<tr><td class="cellname">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="bn">${r[3]}</td><td>${r[4]}</td><td class="small muted">${r[5]}</td></tr>`).join(''))}`;
+
+/* ---------- APPROVALS ---------- */
+SCREENS.approvals=()=>{
+  const mine=state.role==='Finance Manager';
+  const rows=APPROVALS.map(a=>`<tr class="clickable" onclick="openApproval('${a.id}')"><td class="cellname">${a.type}</td><td>${a.who}</td><td class="bn">${a.amt}</td><td>${a.req}</td><td>${a.level}</td><td>${a.status==='Approved'?pill('p-green',a.status):a.status==='Awaiting you'?pill('p-amber',a.status):pill('p-blue',a.status)}</td></tr>`).join('');
+  return `<div class="page-head"><div><h1>Approvals</h1><div class="desc">${mine?'Final approval — Finance Manager':'Three-level ladder'}: Shop → TV Team (Market Head) → Finance Manager</div></div></div>
+  <div class="note mb12"><span class="ic">✓</span><div>Applies to <b>discounts, refunds, adjustments and shop creation</b>. Every decision, approver and timestamp is retained for audit.</div></div>
+  ${table(['Type','Requested by','Amount','Submitted','Current level','Status'],rows)}`;
+};
+function openApproval(id){
+  const a=APPROVALS.find(x=>x.id===id);
+  const done=a.status==='Approved';
+  setPage(`<div class="back" onclick="go('approvals')">← Approvals</div>
+  <div class="page-head"><div><h1>${a.type} — ${a.who}</h1><div class="desc">${a.amt} · submitted ${a.req}</div></div></div>
+  <div class="grid two-col">
+   <div class="card card-pad"><div class="section-title mb12">Approval ladder</div>
+    <div class="ladder">
+      <div class="lad ok"><div class="rail"><div class="node">✓</div><div class="stem"></div></div><div class="body"><div class="t">Shop — submitted</div><div class="s">Request &amp; supporting documents provided</div></div></div>
+      <div class="lad ${done||a.level.includes('Finance')?'ok':'cur'}"><div class="rail"><div class="node">${done||a.level.includes('Finance')?'✓':'2'}</div><div class="stem"></div></div><div class="body"><div class="t">Technical Visit Team (Market Head)</div><div class="s">Operational review</div></div></div>
+      <div class="lad ${done?'ok':a.level.includes('Finance')?'cur':'wait'}"><div class="rail"><div class="node">${done?'✓':'3'}</div></div><div class="body"><div class="t">Finance Manager</div><div class="s">Final approval on financial impact &amp; policy</div></div></div>
+    </div></div>
+   <div class="card card-pad"><div class="section-title mb12">Request</div><div class="detail-grid" style="grid-template-columns:1fr">${dl('Type',a.type)}${dl('Requested by',a.who)}${dl('Amount',a.amt)}${dl('Reason','Customer goodwill / correction')}</div>
+    ${done?`<div class="note ok mt12"><span class="ic">✓</span><div>Approved &amp; posted to SAP.</div></div>`:`<div style="display:flex;gap:9px;margin-top:14px"><button class="btn btn-danger" onclick="toast('Rejected','Applicant notified with reason.')">Reject</button><button class="btn btn-success" onclick="toast('Approved','Advanced / completed and posted to SAP.')">Approve</button></div>`}</div>
+  </div>`);
+}
+
+/* ---------- REPORTS ---------- */
+SCREENS.reports=()=>{
+  const cats=Object.keys(REPORTS);
+  const cards=REPORTS[state.repCat].map(r=>`<div class="card card-pad clickable" style="cursor:pointer" onclick="openReport('${r}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="section-title">${r}</div><div class="small muted mt8">Filterable by date range · exportable</div></div><span style="font-size:20px;color:var(--brand)">▦</span></div></div>`).join('');
+  return `<div class="page-head"><div><h1>Reports</h1><div class="desc">${coName()} · operational, master-data and finance reports (~14)</div></div></div>
+  ${tabbar(cats,state.repCat,'repCatSet')}
+  <div class="grid two-col">${cards}</div>`;
+};
+function repCatSet(c){ state.repCat=c; go('reports'); }
+function openReport(name){
+  let head,rows;
+  if(name==='SAP Posting Status'){head=['Voucher','Posting date','SAP ref','Status','Error'];rows=[['V050','05 Apr','SAP12345','Success','—'],['V051','05 Apr','—','Failed','Cost centre missing']];}
+  else if(name==='SAP Monthly Revenue'){head=['Month','Market','Agent group','Batch','Total revenue','Commission'];rows=[['Apr-2026','UK','Group A','B001','2,000,000','200,000']];}
+  else if(name.includes('Outstanding')){head=['Shop','Total due','0–30','31–60','61–90','90+'];rows=[['ABC Gems','100,000','50,000','30,000','10,000','10,000']];}
+  else if(name==='Unallocated Voucher Report'){head=['Voucher','Tour','Service date','Days to tour'];rows=[['WTL-2026-0010','T1020','10 Apr','4'],['WTL-2026-0021','T1044','12 Apr','6']];}
+  else if(name==='Guide Master'){head=['Guide','Type','Licence','Rating'];rows=GUIDES.slice(0,4).map(g=>[g.name,g.type,g.lic,String(g.rating)]);}
+  else {head=['Voucher','Tour','Shop','Sales','Commission'];rows=[['WTL-2026-0001','T1001','ABC Gems','370,000','37,000'],['WTL-2026-0004','T1005','Royal Tea Co.','760,000','76,000']];}
+  modal(`<div class="modal-head"><h3>${name}</h3><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="toolbar"><button class="filter-chip">Date range ▾</button><button class="filter-chip">Company: ${state.co} ▾</button><button class="btn btn-soft btn-sm" style="margin-left:auto" onclick="toast('Exported','Report exported.')">⤓ Export</button></div><div class="table-wrap"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${i===0?'cellname':'bn'}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div><div class="modal-foot"><button class="btn btn-primary" onclick="closeModal()">Close</button></div>`,'wide');
+}
+
+/* ---------- NOTIFICATIONS ---------- */
+SCREENS.notifications=()=>`
+  <div class="page-head"><div><h1>Notifications</h1><div class="desc">In-app · email · SMS · WhatsApp</div></div>
+  <div class="head-actions"><button class="btn btn-ghost btn-sm" onclick="toast('Marked read','All notifications marked as read.')">Mark all read</button></div></div>
+  <div class="card">${NOTIFS.map(n=>`<div class="upload" style="border-style:solid;background:#fff;cursor:pointer" onclick="toast('Opening','Jumps to the related record.')"><div class="uic" style="color:var(--${n.type})">${n.ic}</div><div class="meta"><b>${n.t}</b><div>${n.time}</div></div>${pill('p-'+n.type,'View')}</div>`).join('')}</div>`;
+
+/* ---------- ADMIN: USERS & RBAC ---------- */
+const RBAC=[
+ ['Vouchers',1,1,0,0,1],['Sales',1,1,1,1,0],['Settlement',1,1,0,0,1],['Approvals',1,1,0,0,0],['Reports',1,1,1,1,1],['Onboarding',1,0,1,0,1],['Admin',0,0,0,0,1]
+];
+SCREENS.users=()=>`
+  <div class="page-head"><div><h1>Users &amp; access (RBAC)</h1><div class="desc">Role-based permissions · superset of roles, configurable ${aBadge('A11')}</div></div>
+  <div class="head-actions"><button class="btn btn-primary btn-sm" onclick="toast('Add user','Create a user and assign a role.')">＋ Add user</button></div></div>
+  <div class="grid two-col mb12">
+    ${table(['User','Role','Status'],[
+      ['Anil Gunamuni','Technical Visit Team','Active'],['Dinika Bandara','Finance Manager','Active'],['Mahesh W.','IT / Administrator','Active'],['ABC Gems','Shop / Supplier','Active'],['John Silva','Guide / Chauffeur','Active']
+    ].map(r=>`<tr><td class="cellname">${r[0]}</td><td>${r[1]}</td><td>${pill('p-green',r[2])}</td></tr>`).join(''))}
+    <div class="card"><div class="card-head"><div class="section-title">Permission matrix</div></div><div class="table-wrap"><table><thead><tr><th>Module</th><th>TV</th><th>Fin</th><th>Shop</th><th>Guide</th><th>IT</th></tr></thead><tbody>
+      ${RBAC.map(r=>`<tr><td class="cellname">${r[0]}</td>${r.slice(1).map(c=>`<td>${c?'<span class="tick">✓</span>':'<span class="cross">–</span>'}</td>`).join('')}</tr>`).join('')}
+    </tbody></table></div></div>
+  </div>`;
+
+/* ---------- ADMIN: INTEGRATIONS ---------- */
+SCREENS.integrations=()=>`
+  <div class="page-head"><div><h1>Integrations</h1><div class="desc">OKLO inbound ${aBadge('A8')} · SAP outbound ${aBadge('A9')} · isolated &amp; monitored</div></div></div>
+  <div class="grid two-col mb12">
+    <div class="card card-pad"><div style="display:flex;justify-content:space-between;align-items:center"><div class="section-title">OKLO (operational in)</div>${pill('p-green','Healthy')}</div><div class="mt12">${r2('Last sync','2 min ago')}${r2('Records today','1,284')}${r2('Mode','Push + pull backstop')}</div><button class="btn btn-soft btn-sm mt12" onclick="toast('Sync triggered','Pulling latest from OKLO.')">Sync now</button></div>
+    <div class="card card-pad"><div style="display:flex;justify-content:space-between;align-items:center"><div class="section-title">SAP (financial out)</div>${pill('p-amber','1 failed')}</div><div class="mt12">${r2('Posting success','97%')}${r2('Posted today','LKR 1.25M')}${r2('Failed','1 (retry available)')}</div><button class="btn btn-soft btn-sm mt12" onclick="toast('Retry queued','Failed SAP posting re-queued.')">Retry failed</button></div>
+  </div>
+  <div class="card"><div class="card-head"><div class="section-title">Integration error log</div></div><div class="table-wrap"><table><thead><tr><th>Time</th><th>System</th><th>Event</th><th>Status</th></tr></thead><tbody>
+    <tr><td>10:42</td><td>SAP</td><td>Posting V051 — cost centre missing</td><td>${pill('p-red','Failed')}</td></tr>
+    <tr><td>10:31</td><td>OKLO</td><td>Service line import (14 records)</td><td>${pill('p-green','OK')}</td></tr>
+    <tr><td>09:58</td><td>SAP</td><td>Revenue posting batch</td><td>${pill('p-green','OK')}</td></tr>
+  </tbody></table></div></div>`;
+
+/* ---------- ADMIN: SETTINGS ---------- */
+SCREENS.settings=()=>`
+  <div class="page-head"><div><h1>Settings</h1><div class="desc">Categories, commission rates &amp; revenue-recognition rules</div></div></div>
+  <div class="grid two-col">
+    <div class="card card-pad"><div class="section-title mb12">Per-category commission (per company)</div>
+      ${table(['Category','WTL','WBTL'],CATS.slice(0,6).map(c=>`<tr><td class="cellname">${c}</td><td class="bn">${[10,8,11,9,12,7][CATS.indexOf(c)]||10}%</td><td class="bn">${[11,8,11,9,12,7][CATS.indexOf(c)]||10}%</td></tr>`).join(''))}
+    </div>
+    <div class="card card-pad"><div class="section-title mb12">Revenue recognition ${aBadge('A6')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0"><span>Commission applies to market</span><div class="toggle on" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line)"><span>Market-level override (e.g. Indian market)</span><div class="toggle on" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line)"><span>Per-agreement custom rules <span class="pill p-purple">Phase 2</span></span><div class="toggle" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+      <div class="note mt12"><span class="ic">◆</span><div>Precedence: market override &gt; category default. ${aBadge('A6')}</div></div>
+    </div>
+  </div>`;
+
+/* ---------- ADMIN: ISSUES ---------- */
+SCREENS.issues=()=>`
+  <div class="page-head"><div><h1>Issues</h1><div class="desc">Reported by shops &amp; guides · assignable to TV or IT</div></div></div>
+  ${table(['Reporter','Category','Description','Assigned','Status'],ISSUES.map(i=>`<tr><td class="cellname">${i.by}</td><td>${i.cat}</td><td>${i.desc}</td><td>${i.team}</td><td>${i.status==='Resolved'?pill('p-green',i.status):i.status==='Open'?pill('p-red',i.status):pill('p-blue',i.status)}</td></tr>`).join(''))}`;
+
+/* ---------- ADMIN: AUDIT ---------- */
+SCREENS.audit=()=>`
+  <div class="page-head"><div><h1>Audit log</h1><div class="desc">Every critical operation with actor &amp; timestamp · tamper-evident</div></div></div>
+  ${table(['Time','Actor','Action','Result'],AUDIT.map(a=>`<tr><td>${a.time}</td><td>${a.who}</td><td>${a.act}</td><td>${a.st==='Failed'?pill('p-red',a.st):pill('p-green',a.st)}</td></tr>`).join(''))}`;
+
+/* ============================================================
+   SHOP PORTAL (external)
+   ============================================================ */
+SCREENS.shopHome=()=>`
+  <div class="page-head"><div><h1>ABC Gems</h1><div class="desc">Gem · Colombo, Western · partner of Walkers Tours Ltd</div></div>
+  <div class="head-actions"><button class="btn btn-ghost btn-sm" onclick="go('issue')">Report issue</button></div></div>
+  <div class="kpis three mb12">${kpi('Visits this month','9','tours hosted','var(--brand-soft)','var(--brand)','▤')}${kpi('Sales recorded','LKR 1.21M','▲','var(--green-bg)','var(--green)','⊞')}${kpi('Outstanding','LKR 100,000','aging','var(--amber-bg)','var(--amber)','◴')}</div>
+  <div class="grid two-col">
+    <div class="card card-pad"><div class="section-title mb12">Compliance</div>${docRow('Business Registration','exp 31 Dec 2026','p-green','Valid')}${docRow('Gem Authority Licence','exp 30 Aug 2026','p-amber','Expiring soon')}${docRow('Public Liability Insurance','exp 15 Jul 2026','p-green','Valid')}<button class="btn btn-soft btn-sm mt12">＋ Upload / renew document</button></div>
+    <div class="card card-pad"><div class="section-title mb12">Upcoming visits</div>${table(['Voucher','Date','Pax','Guide'],[['WTL-2026-0001','01 Apr','4','John Silva'],['WTL-2026-0003','03 Apr','3','Saman K.']].map(r=>`<tr><td class="cellname">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join(''))}</div>
+  </div>`;
+SCREENS.shopVisits=()=>`
+  <div class="page-head"><div><h1>Visits &amp; vouchers</h1><div class="desc">Tours allocated to your shop</div></div></div>
+  ${table(['Voucher','Tour','Date','Pax','Guide','Status'],VCH.filter(v=>v.shop==='ABC Gems'||v.shop==='Spice Haven').map(v=>`<tr class="clickable" onclick="toast('Visit detail','Opens the visit with sales-entry option.')"><td class="cellname">${v.ser}</td><td>${v.tour}</td><td>${v.date}</td><td>${v.pax}</td><td>${v.guide}</td><td>${pill(statusPill(v.status),v.status)}</td></tr>`).join(''))}`;
+SCREENS.shopSales=()=>`
+  <div class="page-head"><div><h1>Record sales</h1><div class="desc">Enter the sale (or a zero entry) against a voucher</div></div></div>
+  <div class="grid two-col">
+    <div class="card card-pad"><div class="section-title mb12">Sales entry</div>
+      <div class="form-grid"><div class="field full"><label>Voucher</label><select><option>WTL-2026-0009 · Tour T1015 · 7 pax</option></select></div>
+        <div class="field"><label>Sales amount (LKR)</label><input id="saleAmt" value="88,000" oninput="discWarn()"></div>
+        <div class="field"><label>Confirmed pax</label><input value="7"></div>
+        <div class="field"><label>Visit date</label><input value="09 Apr 2026"></div>
+        <div class="field"><label>Discount (LKR)</label><input id="discAmt" value="2,000" oninput="discWarn()"></div>
+      </div>
+      <label style="display:flex;gap:9px;align-items:center;margin-top:10px;font-size:13px"><input type="checkbox"> No purchase — record a zero entry</label>
+      <div id="discNote" class="note warn mt12" style="display:flex"><span class="ic">%</span><div>Discount exceeds threshold — will route for approval (Shop → TV Team → Finance Manager) before taking effect.</div></div>
+      <div style="display:flex;gap:9px;margin-top:14px"><button class="btn btn-ghost" onclick="toast('Amendment','Amend with a reason; history retained.')">Amend later</button><button class="btn btn-primary" onclick="toast('Sales submitted successfully','Visible to the TV Team in real time.')">Submit</button></div>
+    </div>
+    <div class="card card-pad"><div class="section-title mb12">Commission split</div>${r2('Sales amount','LKR 88,000')}${r2('Company commission (10%)','LKR 8,800')}${r2('Agent / guide commission','LKR 4,400')}${r2('Discount','LKR 2,000')}<div style="border-top:1px solid var(--line);margin-top:8px;padding-top:8px">${r2('<b>Net to settle</b>','<b>LKR 86,000</b>')}</div><div class="note mt12"><span class="ic">✦</span><div>Company &amp; agent commission tracked separately. ${aBadge('A6')}</div></div></div>
+  </div>`;
+function discWarn(){const n=$('#discNote');if(n)n.style.display='flex';}
+SCREENS.shopSettlements=()=>`
+  <div class="page-head"><div><h1>Settlements</h1><div class="desc">Upload evidence so finance can validate your settlement</div></div></div>
+  <div class="card card-pad mb12"><div class="section-title mb12">Upload settlement evidence</div>
+    ${up('Sales details','sales-apr.xlsx')}${up('Agent commission details','commission.xlsx')}${up('Email approvals','approval.eml')}${up('Shop receipts','3 files')}${up('Bank deposit slip','deposit-0412.pdf')}
+    <button class="btn btn-primary mt12" onclick="toast('Uploaded','Sent to TV Team for verification.')">Submit for verification</button>
+  </div>
+  ${table(['Period','Sales','Status'],[['Apr 2026','LKR 1,210,000',pill('p-amber','TV verify')],['Mar 2026','LKR 980,000',pill('p-green','Settled')]].map(r=>`<tr><td class="cellname">${r[0]}</td><td class="bn">${r[1]}</td><td>${r[2]}</td></tr>`).join(''))}`;
+SCREENS.shopRatings=()=>`
+  <div class="page-head"><div><h1>Ratings</h1><div class="desc">How guides rate your shop</div></div></div>
+  <div class="card card-pad"><div style="display:flex;gap:24px;align-items:center"><div><div style="font-family:Bricolage Grotesque;font-weight:700;font-size:40px">4.6</div><div class="stars">★★★★★</div><div class="small muted">based on 128 tours</div></div><div class="note" style="flex:1"><span class="ic">◆</span><div>Higher-rated shops may be prioritised in future allocation. ${aBadge('A1')}</div></div></div></div>`;
+SCREENS.issue=()=>`
+  <div class="page-head"><div><h1>Raise an issue</h1><div class="desc">Reported issues go to the Technical Visit &amp; IT teams</div></div></div>
+  <div class="card card-pad" style="max-width:560px"><div class="form-grid"><div class="field full"><label>Category</label><select><option>Sales entry</option><option>QR scan</option><option>Document upload</option><option>Settlement</option><option>Other</option></select></div><div class="field full"><label>Description</label><textarea rows="4" placeholder="Describe the problem…"></textarea></div></div><button class="btn btn-primary mt12" onclick="toast('Issue submitted','TV &amp; IT teams notified. You can track its status.')">Submit issue</button></div>
+  <div class="card mt16"><div class="card-head"><div class="section-title">My reported issues</div></div><div class="table-wrap"><table><thead><tr><th>Category</th><th>Description</th><th>Status</th></tr></thead><tbody>${ISSUES.slice(0,2).map(i=>`<tr><td>${i.cat}</td><td>${i.desc}</td><td>${i.status==='Open'?pill('p-red',i.status):pill('p-blue',i.status)}</td></tr>`).join('')}</tbody></table></div></div>`;
+
+/* ============================================================
+   GUIDE PORTAL (phone-framed)
+   ============================================================ */
+SCREENS.guidePortal=()=>{
+  return `<div class="page-head"><div><h1>Guide app</h1><div class="desc">First-class field experience for ${'John Silva'} (Chauffeur · ★4.8) — shown in a phone frame to reflect mobile use</div></div></div>
+  <div class="phone-stage"><div class="phone"><div class="phone-screen">
+    <div class="phone-top"><div class="t" id="gTitle">My tours</div><span class="avatar">JS</span></div>
+    <div class="phone-body" id="gBody">${guideView()}</div>
+    <div class="phone-tabs">
+      ${[['guideTours','Tours','▤'],['guideQR','Scan','⊡'],['guideAvailability','Free','◷'],['guideEarnings','Pay','$'],['guideProfile','Me','⊙']].map(t=>`<div class="pt ${state.guideTab===t[0]?'on':''}" onclick="guideGo('${t[0]}')"><span class="pi">${t[2]}</span>${t[1]}</div>`).join('')}
+    </div>
+  </div></div></div>`;
+};
+function guideGo(sub){ state.guideTab=sub; $('#gBody').innerHTML=guideView(); $('#gTitle').textContent={guideTours:'My tours',guideQR:'Scan & record',guideAvailability:'Availability',guideEarnings:'Earnings',guideProfile:'Profile',guideRatings:'Ratings'}[sub]||'Guide'; document.querySelectorAll('.phone-tabs .pt').forEach(p=>p.classList.toggle('on',p.getAttribute('onclick').includes("'"+sub+"'"))); }
+function guideView(){
+  const s=state.guideTab;
+  if(s==='guideTours'){
+    const my=VCH.filter(v=>v.guide==='John Silva');
+    return `<div class="small muted mb12">Upcoming, sorted by date.</div>
+    ${my.map(v=>`<div class="gcard" onclick="guideTourDetail('${v.id}')" style="cursor:pointer"><div style="display:flex;justify-content:space-between"><b>${v.tour} · ${v.shop||'—'}</b>${pill(statusPill(v.status),v.status)}</div><div class="small muted mt8">${v.date} · ${v.pax} pax · ${v.market}</div></div>`).join('')||'<div class="empty">No tours allocated to you yet.</div>'}`;
+  }
+  if(s==='guideTourDetail'){return guideDetailView();}
+  if(s==='guideQR'){
+    return `<div class="empty" style="padding:20px 0"><div class="qr-box" style="width:160px;height:160px;margin:0 auto"></div><div class="mt16"><b>Scan or present the voucher</b></div><div class="small muted">Opens the sales form on scan</div><button class="btn btn-primary btn-block mt16" onclick="guideSaleForm()">Open sales form</button></div>`;
+  }
+  if(s==='guideSale'){
+    return `<div class="gcard"><b>WTL-2026-0009 · Spice Haven</b><div class="small muted mt8">09 Apr · 7 pax · Germany</div></div>
+    <div class="field"><label>Sales amount (LKR)</label><input value="88,000"></div>
+    <div class="field"><label>Confirmed pax</label><input value="7"></div>
+    <div class="field"><label>Visit date</label><input value="09 Apr 2026"></div>
+    <label style="display:flex;gap:9px;align-items:center;margin:8px 0;font-size:13px"><input type="checkbox"> No purchase — zero entry</label>
+    <button class="btn btn-primary btn-block" onclick="toast('Sale recorded successfully','Updated in real time; TV Team notified.');guideGo('guideTours')">Submit sale</button>
+    <div class="note mt12"><span class="ic">◆</span><div>For multi-guide tours, the lead records the sale. ${aBadge('A4')}</div></div>`;
+  }
+  if(s==='guideAvailability'){
+    return `<div class="small muted mb12">Mark the dates you can't take tours. Advisory at allocation. ${aBadge('A7')}</div>
+    <div class="gcard"><b>April 2026</b><div class="mt12" style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px">${Array.from({length:30},(_,i)=>{const off=[10,11,12,13].includes(i+1);return `<div style="aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;${off?'background:var(--red-bg);color:var(--red-tx);font-weight:700':'background:var(--surface-2);color:var(--muted)'}">${i+1}</div>`;}).join('')}</div><div class="small muted mt12"><span class="pill p-red">10–13</span> marked unavailable</div></div>
+    <button class="btn btn-primary btn-block" onclick="toast('Availability saved','TV Team will see this at allocation.')">Save availability</button>`;
+  }
+  if(s==='guideEarnings'){
+    return `<div class="gcard"><div class="small muted">This month</div><div style="font-family:Bricolage Grotesque;font-weight:700;font-size:30px">LKR 61,400</div><div class="small muted">read-only · settled outside the app ${aBadge('A5')}</div></div>
+    ${[['T1001 · ABC Gems','18,500','Settled','p-green'],['T1005 · Royal Tea','38,000','Settled','p-green'],['T1015 · Spice Haven','4,400','Pending','p-amber']].map(r=>`<div class="gcard"><div style="display:flex;justify-content:space-between"><b>${r[0]}</b>${pill(r[3],r[2])}</div><div class="small muted mt8">Agent commission: LKR ${r[1]}</div></div>`).join('')}`;
+  }
+  if(s==='guideRatings'){
+    return `<div class="gcard" style="text-align:center"><div style="font-family:Bricolage Grotesque;font-weight:700;font-size:36px">4.8</div><div class="stars">★★★★★</div><div class="small muted">128 tours</div></div><div class="gcard"><b>Rate a shop you visited</b><div class="stars mt8" style="font-size:22px">★★★★★</div><button class="btn btn-soft btn-block mt12" onclick="toast('Thanks','Rating submitted.')">Submit rating</button></div>`;
+  }
+  /* profile */
+  const g=GUIDES[0];
+  return `<div class="gcard"><b>${g.name}</b><div class="small muted mt8">${g.type} guide · synced from OKLO ${aBadge('A2')}</div></div>
+  <div class="gcard">${r2('Contact',g.phone)}${r2('Languages',g.lang)}${r2('Licence',g.lic)}${r2('Vehicle',g.veh)}</div>
+  <button class="btn btn-ghost btn-block" onclick="guideGo('guideRatings')">View my ratings →</button>
+  <button class="btn btn-ghost btn-block mt8" onclick="toast('Issue','Opens the report-issue form.')">Raise an issue</button>`;
+}
+function guideDetailView(){
+  return `<div class="back" onclick="guideGo('guideTours')">← My tours</div>
+  <div class="gcard"><div style="display:flex;justify-content:space-between"><b>T1020 · ABC Gems</b>${pill('p-amber','To confirm')}</div><div class="small muted mt8">10 Apr 2026 · 6 pax · UK market</div></div>
+  <div class="gcard">${r2('Shop','ABC Gems')}${r2('Category','Gem')}${r2('Address','Colombo, Western')}<button class="btn btn-soft btn-block mt8" onclick="toast('Maps','Opens directions in your map app.')">◎ Navigate to shop</button></div>
+  <div class="gcard" style="text-align:center"><div class="small muted mb12">Voucher QR</div><div class="qr-box" style="width:110px;height:110px;margin:0 auto"></div></div>
+  <div style="display:flex;gap:8px"><button class="btn btn-ghost" style="flex:1" onclick="toast('Flagged to TV Team','You can\\'t take this — TV Team will reassign.')">Can't take ${aBadge('A3')}</button><button class="btn btn-success" style="flex:1" onclick="toast('Confirmed','TV Team &amp; market staff notified.');guideGo('guideTours')">Confirm</button></div>
+  <button class="btn btn-primary btn-block mt12" onclick="guideSaleForm()">Record visit &amp; sales (QR) →</button>`;
+}
+function guideTourDetail(id){ state.guideTab='guideTourDetail'; $('#gBody').innerHTML=guideDetailView(); $('#gTitle').textContent='Tour detail'; }
+function guideSaleForm(){ state.guideTab='guideSale'; $('#gBody').innerHTML=guideView(); $('#gTitle').textContent='Record sale'; }
+
+/* alias screens that live inside guide portal but are referenced by nav fallback */
+SCREENS.guideTours=SCREENS.guidePortal;
+
+/* ============================================================
+   INIT
+   ============================================================ */
+</script>
+</body>
+</html>
